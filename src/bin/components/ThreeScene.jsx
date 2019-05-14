@@ -32,7 +32,7 @@ class ThreeScene extends Component{
 
         //ADD SCENE
         this.scene = new THREE.Scene()
-        this.addGrid()
+        // this.addGrid()
 
         //ADD CAMERA
         this.camera = new THREE.PerspectiveCamera(

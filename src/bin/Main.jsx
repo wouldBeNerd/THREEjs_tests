@@ -8,8 +8,8 @@ import React, { Component } from 'react';
 // } from "react-router-dom";
 
 import ThreeScene from "./components/ThreeScene"
-import Curtain from "./threeJS_extensions/build/Curtain"
-let curtain_test = Curtain()
+import Grid3D from "./threeJS_extensions/build/Grid3D"
+let grid3D = Grid3D()
 
 
 class Main extends Component {
@@ -24,7 +24,7 @@ class Main extends Component {
     render(){
       return(
 
-        <ThreeScene to_scene = {[ curtain_test ]} 
+        <ThreeScene to_scene = {[ grid3D ]} 
             id="cvcalc"
             onwheel={(e)=>e.preventDefault()}
             onmousewheel ={(e)=>e.preventDefault()}
