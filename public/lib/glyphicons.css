@@ -1,0 +1,2658 @@
+/* @CHARSET "UTF-8"; */
+
+.nav-list [class^="glyph-"],
+.nav-list [class*=" glyph-"] {
+	margin-right: 2px;
+}
+
+.btn-large [class^="glyph-"],
+.btn-large [class*=" glyph-"] {
+	margin-top: 4px;
+}
+
+.btn-small [class^="glyph-"],
+.btn-small [class*=" glyph-"] {
+	margin-top: 0;
+}
+
+.btn-mini [class^="glyph-"],
+.btn-mini [class*=" glyph-"] {
+	margin-top: -1px;
+}
+
+[class^="glyph-"],
+[class*=" glyph-"] {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	*margin-right: .3em;
+	line-height: 24px;
+	vertical-align: text-top;
+	background-repeat: no-repeat;
+	background-size : 100%;
+	margin-top: 1px;
+}
+.glyph-white {
+    -webkit-filter: invert(100%);	
+    filter: invert(100%);	
+}
+.glyph-small {
+	width: 14px !important;
+	height: 14px !important;
+}
+
+.glyph-large {
+	width: 32px !important;
+	height: 32px !important;
+}
+
+.glyph-glass {
+	background-image: url("./glyphicons/png/glyphicons-1-glass.png");
+}
+.glyph-magic {
+	background-image: url("./glyphicons/png/glyphicons-10-magic.png");
+}
+.glyph-vector-path-all {
+	background-image: url("./glyphicons/png/glyphicons-100-vector-path-all.png");
+}
+.glyph-font {
+	background-image: url("./glyphicons/png/glyphicons-101-font.png");
+}
+.glyph-italic {
+	background-image: url("./glyphicons/png/glyphicons-102-italic.png");
+}
+.glyph-bold {
+	background-image: url("./glyphicons/png/glyphicons-103-bold.png");
+}
+.glyph-text-underline {
+	background-image: url("./glyphicons/png/glyphicons-104-text-underline.png");
+}
+.glyph-text-strike {
+	background-image: url("./glyphicons/png/glyphicons-105-text-strike.png");
+}
+.glyph-text-height {
+	background-image: url("./glyphicons/png/glyphicons-106-text-height.png");
+}
+.glyph-text-width {
+	background-image: url("./glyphicons/png/glyphicons-107-text-width.png");
+}
+.glyph-text-resize {
+	background-image: url("./glyphicons/png/glyphicons-108-text-resize.png");
+}
+.glyph-left-indent {
+	background-image: url("./glyphicons/png/glyphicons-109-left-indent.png");
+}
+.glyph-envelope {
+	background-image: url("./glyphicons/png/glyphicons-11-envelope.png");
+}
+.glyph-right-indent {
+	background-image: url("./glyphicons/png/glyphicons-110-right-indent.png");
+}
+.glyph-align-left {
+	background-image: url("./glyphicons/png/glyphicons-111-align-left.png");
+}
+.glyph-align-center {
+	background-image: url("./glyphicons/png/glyphicons-112-align-center.png");
+}
+.glyph-align-right {
+	background-image: url("./glyphicons/png/glyphicons-113-align-right.png");
+}
+.glyph-justify {
+	background-image: url("./glyphicons/png/glyphicons-114-justify.png");
+}
+.glyph-list {
+	background-image: url("./glyphicons/png/glyphicons-115-list.png");
+}
+.glyph-text-smaller {
+	background-image: url("./glyphicons/png/glyphicons-116-text-smaller.png");
+}
+.glyph-text-bigger {
+	background-image: url("./glyphicons/png/glyphicons-117-text-bigger.png");
+}
+.glyph-embed {
+	background-image: url("./glyphicons/png/glyphicons-118-embed.png");
+}
+.glyph-embed-close {
+	background-image: url("./glyphicons/png/glyphicons-119-embed-close.png");
+}
+.glyph-camera {
+	background-image: url("./glyphicons/png/glyphicons-12-camera.png");
+}
+.glyph-table {
+	background-image: url("./glyphicons/png/glyphicons-120-table.png");
+}
+.glyph-message-full {
+	background-image: url("./glyphicons/png/glyphicons-121-message-full.png");
+}
+.glyph-message-empty {
+	background-image: url("./glyphicons/png/glyphicons-122-message-empty.png");
+}
+.glyph-message-in {
+	background-image: url("./glyphicons/png/glyphicons-123-message-in.png");
+}
+.glyph-message-out {
+	background-image: url("./glyphicons/png/glyphicons-124-message-out.png");
+}
+.glyph-message-plus {
+	background-image: url("./glyphicons/png/glyphicons-125-message-plus.png");
+}
+.glyph-message-minus {
+	background-image: url("./glyphicons/png/glyphicons-126-message-minus.png");
+}
+.glyph-message-ban {
+	background-image: url("./glyphicons/png/glyphicons-127-message-ban.png");
+}
+.glyph-message-flag {
+	background-image: url("./glyphicons/png/glyphicons-128-message-flag.png");
+}
+.glyph-message-lock {
+	background-image: url("./glyphicons/png/glyphicons-129-message-lock.png");
+}
+.glyph-heart {
+	background-image: url("./glyphicons/png/glyphicons-13-heart.png");
+}
+.glyph-message-new {
+	background-image: url("./glyphicons/png/glyphicons-130-message-new.png");
+}
+.glyph-inbox {
+	background-image: url("./glyphicons/png/glyphicons-131-inbox.png");
+}
+.glyph-inbox-plus {
+	background-image: url("./glyphicons/png/glyphicons-132-inbox-plus.png");
+}
+.glyph-inbox-minus {
+	background-image: url("./glyphicons/png/glyphicons-133-inbox-minus.png");
+}
+.glyph-inbox-lock {
+	background-image: url("./glyphicons/png/glyphicons-134-inbox-lock.png");
+}
+.glyph-inbox-in {
+	background-image: url("./glyphicons/png/glyphicons-135-inbox-in.png");
+}
+.glyph-inbox-out {
+	background-image: url("./glyphicons/png/glyphicons-136-inbox-out.png");
+}
+.glyph-cogwheel {
+	background-image: url("./glyphicons/png/glyphicons-137-cogwheel.png");
+}
+.glyph-cogwheels {
+	background-image: url("./glyphicons/png/glyphicons-138-cogwheels.png");
+}
+.glyph-picture {
+	background-image: url("./glyphicons/png/glyphicons-139-picture.png");
+}
+.glyph-beach-umbrella {
+	background-image: url("./glyphicons/png/glyphicons-14-beach-umbrella.png");
+}
+.glyph-adjust-alt {
+	background-image: url("./glyphicons/png/glyphicons-140-adjust-alt.png");
+}
+.glyph-database-lock {
+	background-image: url("./glyphicons/png/glyphicons-141-database-lock.png");
+}
+.glyph-database-plus {
+	background-image: url("./glyphicons/png/glyphicons-142-database-plus.png");
+}
+.glyph-database-minus {
+	background-image: url("./glyphicons/png/glyphicons-143-database-minus.png");
+}
+.glyph-database-ban {
+	background-image: url("./glyphicons/png/glyphicons-144-database-ban.png");
+}
+.glyph-folder-open {
+	background-image: url("./glyphicons/png/glyphicons-145-folder-open.png");
+}
+.glyph-folder-plus {
+	background-image: url("./glyphicons/png/glyphicons-146-folder-plus.png");
+}
+.glyph-folder-minus {
+	background-image: url("./glyphicons/png/glyphicons-147-folder-minus.png");
+}
+.glyph-folder-lock {
+	background-image: url("./glyphicons/png/glyphicons-148-folder-lock.png");
+}
+.glyph-folder-flag {
+	background-image: url("./glyphicons/png/glyphicons-149-folder-flag.png");
+}
+.glyph-train {
+	background-image: url("./glyphicons/png/glyphicons-15-train.png");
+}
+.glyph-folder-new {
+	background-image: url("./glyphicons/png/glyphicons-150-folder-new.png");
+}
+.glyph-edit {
+	background-image: url("./glyphicons/png/glyphicons-151-edit.png");
+}
+.glyph-new-window {
+	background-image: url("./glyphicons/png/glyphicons-152-new-window.png");
+}
+.glyph-check {
+	background-image: url("./glyphicons/png/glyphicons-153-check.png");
+}
+.glyph-unchecked {
+	background-image: url("./glyphicons/png/glyphicons-154-unchecked.png");
+}
+.glyph-more-windows {
+	background-image: url("./glyphicons/png/glyphicons-155-more-windows.png");
+}
+.glyph-show-big-thumbnails {
+	background-image: url("./glyphicons/png/glyphicons-156-show-big-thumbnails.png");
+}
+.glyph-show-thumbnails {
+	background-image: url("./glyphicons/png/glyphicons-157-show-thumbnails.png");
+}
+.glyph-show-thumbnails-with-lines {
+	background-image: url("./glyphicons/png/glyphicons-158-show-thumbnails-with-lines.png");
+}
+.glyph-show-lines {
+	background-image: url("./glyphicons/png/glyphicons-159-show-lines.png");
+}
+.glyph-print {
+	background-image: url("./glyphicons/png/glyphicons-16-print.png");
+}
+.glyph-playlist {
+	background-image: url("./glyphicons/png/glyphicons-160-playlist.png");
+}
+.glyph-imac {
+	background-image: url("./glyphicons/png/glyphicons-161-imac.png");
+}
+.glyph-macbook {
+	background-image: url("./glyphicons/png/glyphicons-162-macbook.png");
+}
+.glyph-ipad {
+	background-image: url("./glyphicons/png/glyphicons-163-ipad.png");
+}
+.glyph-iphone {
+	background-image: url("./glyphicons/png/glyphicons-164-iphone.png");
+}
+.glyph-iphone-transfer {
+	background-image: url("./glyphicons/png/glyphicons-165-iphone-transfer.png");
+}
+.glyph-iphone-exchange {
+	background-image: url("./glyphicons/png/glyphicons-166-iphone-exchange.png");
+}
+.glyph-ipod {
+	background-image: url("./glyphicons/png/glyphicons-167-ipod.png");
+}
+.glyph-ipod-shuffle {
+	background-image: url("./glyphicons/png/glyphicons-168-ipod-shuffle.png");
+}
+.glyph-ear-plugs {
+	background-image: url("./glyphicons/png/glyphicons-169-ear-plugs.png");
+}
+.glyph-bin {
+	background-image: url("./glyphicons/png/glyphicons-17-bin.png");
+}
+.glyph-record {
+	background-image: url("./glyphicons/png/glyphicons-170-record.png");
+}
+.glyph-step-backward {
+	background-image: url("./glyphicons/png/glyphicons-171-step-backward.png");
+}
+.glyph-fast-backward {
+	background-image: url("./glyphicons/png/glyphicons-172-fast-backward.png");
+}
+.glyph-rewind {
+	background-image: url("./glyphicons/png/glyphicons-173-rewind.png");
+}
+.glyph-play {
+	background-image: url("./glyphicons/png/glyphicons-174-play.png");
+}
+.glyph-pause {
+	background-image: url("./glyphicons/png/glyphicons-175-pause.png");
+}
+.glyph-stop {
+	background-image: url("./glyphicons/png/glyphicons-176-stop.png");
+}
+.glyph-forward {
+	background-image: url("./glyphicons/png/glyphicons-177-forward.png");
+}
+.glyph-fast-forward {
+	background-image: url("./glyphicons/png/glyphicons-178-fast-forward.png");
+}
+.glyph-step-forward {
+	background-image: url("./glyphicons/png/glyphicons-179-step-forward.png");
+}
+.glyph-music {
+	background-image: url("./glyphicons/png/glyphicons-18-music.png");
+}
+.glyph-eject {
+	background-image: url("./glyphicons/png/glyphicons-180-eject.png");
+}
+.glyph-facetime-video {
+	background-image: url("./glyphicons/png/glyphicons-181-facetime-video.png");
+}
+.glyph-download-alt {
+	background-image: url("./glyphicons/png/glyphicons-182-download-alt.png");
+}
+.glyph-mute {
+	background-image: url("./glyphicons/png/glyphicons-183-mute.png");
+}
+.glyph-volume-down {
+	background-image: url("./glyphicons/png/glyphicons-184-volume-down.png");
+}
+.glyph-volume-up {
+	background-image: url("./glyphicons/png/glyphicons-185-volume-up.png");
+}
+.glyph-screenshot {
+	background-image: url("./glyphicons/png/glyphicons-186-screenshot.png");
+}
+.glyph-move {
+	background-image: url("./glyphicons/png/glyphicons-187-move.png");
+}
+.glyph-more {
+	background-image: url("./glyphicons/png/glyphicons-188-more.png");
+}
+.glyph-brightness-reduce {
+	background-image: url("./glyphicons/png/glyphicons-189-brightness-reduce.png");
+}
+.glyph-music-alt {
+	background-image: url("./glyphicons/png/glyphicons-19-music-alt.png");
+}
+.glyph-brightness-increase {
+	background-image: url("./glyphicons/png/glyphicons-190-brightness-increase.png");
+}
+.glyph-plus-sign {
+	background-image: url("./glyphicons/png/glyphicons-191-plus-sign.png");
+}
+.glyph-minus-sign {
+	background-image: url("./glyphicons/png/glyphicons-192-minus-sign.png");
+}
+.glyph-remove-sign {
+	background-image: url("./glyphicons/png/glyphicons-193-remove-sign.png");
+}
+.glyph-ok-sign {
+	background-image: url("./glyphicons/png/glyphicons-194-ok-sign.png");
+}
+.glyph-question-sign {
+	background-image: url("./glyphicons/png/glyphicons-195-question-sign.png");
+}
+.glyph-info-sign {
+	background-image: url("./glyphicons/png/glyphicons-196-info-sign.png");
+}
+.glyph-exclamation-sign {
+	background-image: url("./glyphicons/png/glyphicons-197-exclamation-sign.png");
+}
+.glyph-remove-circle {
+	background-image: url("./glyphicons/png/glyphicons-198-remove-circle.png");
+}
+.glyph-ok-circle {
+	background-image: url("./glyphicons/png/glyphicons-199-ok-circle.png");
+}
+.glyph-leaf {
+	background-image: url("./glyphicons/png/glyphicons-2-leaf.png");
+}
+.glyph-heart-empty {
+	background-image: url("./glyphicons/png/glyphicons-20-heart-empty.png");
+}
+.glyph-ban-circle {
+	background-image: url("./glyphicons/png/glyphicons-200-ban-circle.png");
+}
+.glyph-download {
+	background-image: url("./glyphicons/png/glyphicons-201-download.png");
+}
+.glyph-upload {
+	background-image: url("./glyphicons/png/glyphicons-202-upload.png");
+}
+.glyph-shopping-cart {
+	background-image: url("./glyphicons/png/glyphicons-203-shopping-cart.png");
+}
+.glyph-lock {
+	background-image: url("./glyphicons/png/glyphicons-204-lock.png");
+}
+.glyph-unlock {
+	background-image: url("./glyphicons/png/glyphicons-205-unlock.png");
+}
+.glyph-electricity {
+	background-image: url("./glyphicons/png/glyphicons-206-electricity.png");
+}
+.glyph-ok {
+	background-image: url("./glyphicons/png/glyphicons-207-ok.png");
+}
+.glyph-remove {
+	background-image: url("./glyphicons/png/glyphicons-208-remove.png");
+}
+.glyph-cart-in {
+	background-image: url("./glyphicons/png/glyphicons-209-cart-in.png");
+}
+.glyph-home {
+	background-image: url("./glyphicons/png/glyphicons-21-home.png");
+}
+.glyph-cart-out {
+	background-image: url("./glyphicons/png/glyphicons-210-cart-out.png");
+}
+.glyph-arrow-left {
+	background-image: url("./glyphicons/png/glyphicons-211-arrow-left.png");
+}
+.glyph-arrow-right {
+	background-image: url("./glyphicons/png/glyphicons-212-arrow-right.png");
+}
+.glyph-arrow-down {
+	background-image: url("./glyphicons/png/glyphicons-213-arrow-down.png");
+}
+.glyph-arrow-up {
+	background-image: url("./glyphicons/png/glyphicons-214-arrow-up.png");
+}
+.glyph-resize-small {
+	background-image: url("./glyphicons/png/glyphicons-215-resize-small.png");
+}
+.glyph-resize-full {
+	background-image: url("./glyphicons/png/glyphicons-216-resize-full.png");
+}
+.glyph-circle-arrow-left {
+	background-image: url("./glyphicons/png/glyphicons-217-circle-arrow-left.png");
+}
+.glyph-circle-arrow-right {
+	background-image: url("./glyphicons/png/glyphicons-218-circle-arrow-right.png");
+}
+.glyph-circle-arrow-top {
+	background-image: url("./glyphicons/png/glyphicons-219-circle-arrow-top.png");
+}
+.glyph-snowflake {
+	background-image: url("./glyphicons/png/glyphicons-22-snowflake.png");
+}
+.glyph-circle-arrow-down {
+	background-image: url("./glyphicons/png/glyphicons-220-circle-arrow-down.png");
+}
+.glyph-play-button {
+	background-image: url("./glyphicons/png/glyphicons-221-play-button.png");
+}
+.glyph-unshare {
+	background-image: url("./glyphicons/png/glyphicons-222-unshare.png");
+}
+.glyph-share {
+	background-image: url("./glyphicons/png/glyphicons-223-share.png");
+}
+.glyph-chevron-right {
+	background-image: url("./glyphicons/png/glyphicons-224-chevron-right.png");
+}
+.glyph-chevron-left {
+	background-image: url("./glyphicons/png/glyphicons-225-chevron-left.png");
+}
+.glyph-bluetooth {
+	background-image: url("./glyphicons/png/glyphicons-226-bluetooth.png");
+}
+.glyph-euro {
+	background-image: url("./glyphicons/png/glyphicons-227-euro.png");
+}
+.glyph-usd {
+	background-image: url("./glyphicons/png/glyphicons-228-usd.png");
+}
+.glyph-gbp {
+	background-image: url("./glyphicons/png/glyphicons-229-gbp.png");
+}
+.glyph-fire {
+	background-image: url("./glyphicons/png/glyphicons-23-fire.png");
+}
+.glyph-retweet-2 {
+	background-image: url("./glyphicons/png/glyphicons-230-retweet-2.png");
+}
+.glyph-moon {
+	background-image: url("./glyphicons/png/glyphicons-231-moon.png");
+}
+.glyph-sun {
+	background-image: url("./glyphicons/png/glyphicons-232-sun.png");
+}
+.glyph-cloud {
+	background-image: url("./glyphicons/png/glyphicons-233-cloud.png");
+}
+.glyph-direction {
+	background-image: url("./glyphicons/png/glyphicons-234-direction.png");
+}
+.glyph-brush {
+	background-image: url("./glyphicons/png/glyphicons-235-brush.png");
+}
+.glyph-pen {
+	background-image: url("./glyphicons/png/glyphicons-236-pen.png");
+}
+.glyph-zoom-in {
+	background-image: url("./glyphicons/png/glyphicons-237-zoom-in.png");
+}
+.glyph-zoom-out {
+	background-image: url("./glyphicons/png/glyphicons-238-zoom-out.png");
+}
+.glyph-pin {
+	background-image: url("./glyphicons/png/glyphicons-239-pin.png");
+}
+.glyph-magnet {
+	background-image: url("./glyphicons/png/glyphicons-24-magnet.png");
+}
+.glyph-albums {
+	background-image: url("./glyphicons/png/glyphicons-240-albums.png");
+}
+.glyph-rotation-lock {
+	background-image: url("./glyphicons/png/glyphicons-241-rotation-lock.png");
+}
+.glyph-flash {
+	background-image: url("./glyphicons/png/glyphicons-242-flash.png");
+}
+.glyph-map-marker {
+	background-image: url("./glyphicons/png/glyphicons-243-map-marker.png");
+}
+.glyph-anchor {
+	background-image: url("./glyphicons/png/glyphicons-244-anchor.png");
+}
+.glyph-conversation {
+	background-image: url("./glyphicons/png/glyphicons-245-conversation.png");
+}
+.glyph-chat {
+	background-image: url("./glyphicons/png/glyphicons-246-chat.png");
+}
+.glyph-note-empty {
+	background-image: url("./glyphicons/png/glyphicons-247-note-empty.png");
+}
+.glyph-note {
+	background-image: url("./glyphicons/png/glyphicons-248-note.png");
+}
+.glyph-asterisk {
+	background-image: url("./glyphicons/png/glyphicons-249-asterisk.png");
+}
+.glyph-parents {
+	background-image: url("./glyphicons/png/glyphicons-25-parents.png");
+}
+.glyph-divide {
+	background-image: url("./glyphicons/png/glyphicons-250-divide.png");
+}
+.glyph-snorkel-diving {
+	background-image: url("./glyphicons/png/glyphicons-251-snorkel-diving.png");
+}
+.glyph-scuba-diving {
+	background-image: url("./glyphicons/png/glyphicons-252-scuba-diving.png");
+}
+.glyph-oxygen-bottle {
+	background-image: url("./glyphicons/png/glyphicons-253-oxygen-bottle.png");
+}
+.glyph-fins {
+	background-image: url("./glyphicons/png/glyphicons-254-fins.png");
+}
+.glyph-fishes {
+	background-image: url("./glyphicons/png/glyphicons-255-fishes.png");
+}
+.glyph-boat {
+	background-image: url("./glyphicons/png/glyphicons-256-boat.png");
+}
+.glyph-delete {
+	background-image: url("./glyphicons/png/glyphicons-257-delete.png");
+}
+.glyph-sheriffs-star {
+	background-image: url("./glyphicons/png/glyphicons-258-sheriffs-star.png");
+}
+.glyph-qrcode {
+	background-image: url("./glyphicons/png/glyphicons-259-qrcode.png");
+}
+.glyph-binoculars {
+	background-image: url("./glyphicons/png/glyphicons-26-binoculars.png");
+}
+.glyph-barcode {
+	background-image: url("./glyphicons/png/glyphicons-260-barcode.png");
+}
+.glyph-pool {
+	background-image: url("./glyphicons/png/glyphicons-261-pool.png");
+}
+.glyph-buoy {
+	background-image: url("./glyphicons/png/glyphicons-262-buoy.png");
+}
+.glyph-spade {
+	background-image: url("./glyphicons/png/glyphicons-263-spade.png");
+}
+.glyph-bank {
+	background-image: url("./glyphicons/png/glyphicons-264-bank.png");
+}
+.glyph-vcard {
+	background-image: url("./glyphicons/png/glyphicons-265-vcard.png");
+}
+.glyph-electrical-plug {
+	background-image: url("./glyphicons/png/glyphicons-266-electrical-plug.png");
+}
+.glyph-flag {
+	background-image: url("./glyphicons/png/glyphicons-267-flag.png");
+}
+.glyph-credit-card {
+	background-image: url("./glyphicons/png/glyphicons-268-credit-card.png");
+}
+.glyph-keyboard-wireless {
+	background-image: url("./glyphicons/png/glyphicons-269-keyboard-wireless.png");
+}
+.glyph-road {
+	background-image: url("./glyphicons/png/glyphicons-27-road.png");
+}
+.glyph-keyboard-wireless {
+	background-image: url("./glyphicons/png/glyphicons-270-keyboard-wireless.png");
+}
+.glyph-shield {
+	background-image: url("./glyphicons/png/glyphicons-271-shield.png");
+}
+.glyph-ring {
+	background-image: url("./glyphicons/png/glyphicons-272-ring.png");
+}
+.glyph-cake {
+	background-image: url("./glyphicons/png/glyphicons-273-cake.png");
+}
+.glyph-drink {
+	background-image: url("./glyphicons/png/glyphicons-274-drink.png");
+}
+.glyph-beer {
+	background-image: url("./glyphicons/png/glyphicons-275-beer.png");
+}
+.glyph-fast-food {
+	background-image: url("./glyphicons/png/glyphicons-276-fast-food.png");
+}
+.glyph-cutlery {
+	background-image: url("./glyphicons/png/glyphicons-277-cutlery.png");
+}
+.glyph-pizza {
+	background-image: url("./glyphicons/png/glyphicons-278-pizza.png");
+}
+.glyph-birthday-cake {
+	background-image: url("./glyphicons/png/glyphicons-279-birthday-cake.png");
+}
+.glyph-search {
+	background-image: url("./glyphicons/png/glyphicons-28-search.png");
+}
+.glyph-tablet {
+	background-image: url("./glyphicons/png/glyphicons-280-tablet.png");
+}
+.glyph-settings {
+	background-image: url("./glyphicons/png/glyphicons-281-settings.png");
+}
+.glyph-bullets {
+	background-image: url("./glyphicons/png/glyphicons-282-bullets.png");
+}
+.glyph-cardio {
+	background-image: url("./glyphicons/png/glyphicons-283-cardio.png");
+}
+.glyph-t-shirt {
+	background-image: url("./glyphicons/png/glyphicons-284-t-shirt.png");
+}
+.glyph-pants {
+	background-image: url("./glyphicons/png/glyphicons-285-pants.png");
+}
+.glyph-sweater {
+	background-image: url("./glyphicons/png/glyphicons-286-sweater.png");
+}
+.glyph-fabric {
+	background-image: url("./glyphicons/png/glyphicons-287-fabric.png");
+}
+.glyph-leather {
+	background-image: url("./glyphicons/png/glyphicons-288-leather.png");
+}
+.glyph-scissors {
+	background-image: url("./glyphicons/png/glyphicons-289-scissors.png");
+}
+.glyph-cars {
+	background-image: url("./glyphicons/png/glyphicons-29-cars.png");
+}
+.glyph-bomb {
+	background-image: url("./glyphicons/png/glyphicons-290-bomb.png");
+}
+.glyph-skull {
+	background-image: url("./glyphicons/png/glyphicons-291-skull.png");
+}
+.glyph-celebration {
+	background-image: url("./glyphicons/png/glyphicons-292-celebration.png");
+}
+.glyph-tea-kettle {
+	background-image: url("./glyphicons/png/glyphicons-293-tea-kettle.png");
+}
+.glyph-french-press {
+	background-image: url("./glyphicons/png/glyphicons-294-french-press.png");
+}
+.glyph-coffee-cup {
+	background-image: url("./glyphicons/png/glyphicons-295-coffee-cup.png");
+}
+.glyph-pot {
+	background-image: url("./glyphicons/png/glyphicons-296-pot.png");
+}
+.glyph-grater {
+	background-image: url("./glyphicons/png/glyphicons-297-grater.png");
+}
+.glyph-kettle {
+	background-image: url("./glyphicons/png/glyphicons-298-kettle.png");
+}
+.glyph-hospital {
+	background-image: url("./glyphicons/png/glyphicons-299-hospital.png");
+}
+.glyph-dog {
+	background-image: url("./glyphicons/png/glyphicons-3-dog.png");
+}
+.glyph-notes-2 {
+	background-image: url("./glyphicons/png/glyphicons-30-notes-2.png");
+}
+.glyph-hospital-h {
+	background-image: url("./glyphicons/png/glyphicons-300-hospital-h.png");
+}
+.glyph-microphone {
+	background-image: url("./glyphicons/png/glyphicons-301-microphone.png");
+}
+.glyph-webcam {
+	background-image: url("./glyphicons/png/glyphicons-302-webcam.png");
+}
+.glyph-temple-christianity-church {
+	background-image: url("./glyphicons/png/glyphicons-303-temple-christianity-church.png");
+}
+.glyph-temple-islam {
+	background-image: url("./glyphicons/png/glyphicons-304-temple-islam.png");
+}
+.glyph-temple-hindu {
+	background-image: url("./glyphicons/png/glyphicons-305-temple-hindu.png");
+}
+.glyph-temple-buddhist {
+	background-image: url("./glyphicons/png/glyphicons-306-temple-buddhist.png");
+}
+.glyph-bicycle {
+	background-image: url("./glyphicons/png/glyphicons-307-bicycle.png");
+}
+.glyph-life-preserver {
+	background-image: url("./glyphicons/png/glyphicons-308-life-preserver.png");
+}
+.glyph-share-alt {
+	background-image: url("./glyphicons/png/glyphicons-309-share-alt.png");
+}
+.glyph-pencil {
+	background-image: url("./glyphicons/png/glyphicons-31-pencil.png");
+}
+.glyph-comments {
+	background-image: url("./glyphicons/png/glyphicons-310-comments.png");
+}
+.glyph-flower {
+	background-image: url("./glyphicons/png/glyphicons-311-flower.png");
+}
+.glyph-baseball {
+	background-image: url("./glyphicons/png/glyphicons-312-baseball.png");
+}
+.glyph-rugby {
+	background-image: url("./glyphicons/png/glyphicons-313-rugby.png");
+}
+.glyph-ax {
+	background-image: url("./glyphicons/png/glyphicons-314-ax.png");
+}
+.glyph-table-tennis {
+	background-image: url("./glyphicons/png/glyphicons-315-table-tennis.png");
+}
+.glyph-bowling {
+	background-image: url("./glyphicons/png/glyphicons-316-bowling.png");
+}
+.glyph-tree-conifer {
+	background-image: url("./glyphicons/png/glyphicons-317-tree-conifer.png");
+}
+.glyph-tree-deciduous {
+	background-image: url("./glyphicons/png/glyphicons-318-tree-deciduous.png");
+}
+.glyph-more-items {
+	background-image: url("./glyphicons/png/glyphicons-319-more-items.png");
+}
+.glyph-bus {
+	background-image: url("./glyphicons/png/glyphicons-32-bus.png");
+}
+.glyph-sort {
+	background-image: url("./glyphicons/png/glyphicons-320-sort.png");
+}
+.glyph-filter {
+	background-image: url("./glyphicons/png/glyphicons-321-filter.png");
+}
+.glyph-gamepad {
+	background-image: url("./glyphicons/png/glyphicons-322-gamepad.png");
+}
+.glyph-playing-dices {
+	background-image: url("./glyphicons/png/glyphicons-323-playing-dices.png");
+}
+.glyph-calculator {
+	background-image: url("./glyphicons/png/glyphicons-324-calculator.png");
+}
+.glyph-tie {
+	background-image: url("./glyphicons/png/glyphicons-325-tie.png");
+}
+.glyph-wallet {
+	background-image: url("./glyphicons/png/glyphicons-326-wallet.png");
+}
+.glyph-piano {
+	background-image: url("./glyphicons/png/glyphicons-327-piano.png");
+}
+.glyph-sampler {
+	background-image: url("./glyphicons/png/glyphicons-328-sampler.png");
+}
+.glyph-podium {
+	background-image: url("./glyphicons/png/glyphicons-329-podium.png");
+}
+.glyph-wifi-alt {
+	background-image: url("./glyphicons/png/glyphicons-33-wifi-alt.png");
+}
+.glyph-soccer-ball {
+	background-image: url("./glyphicons/png/glyphicons-330-soccer-ball.png");
+}
+.glyph-blog {
+	background-image: url("./glyphicons/png/glyphicons-331-blog.png");
+}
+.glyph-dashboard {
+	background-image: url("./glyphicons/png/glyphicons-332-dashboard.png");
+}
+.glyph-certificate {
+	background-image: url("./glyphicons/png/glyphicons-333-certificate.png");
+}
+.glyph-bell {
+	background-image: url("./glyphicons/png/glyphicons-334-bell.png");
+}
+.glyph-candle {
+	background-image: url("./glyphicons/png/glyphicons-335-candle.png");
+}
+.glyph-pushpin {
+	background-image: url("./glyphicons/png/glyphicons-336-pushpin.png");
+}
+.glyph-iphone-shake {
+	background-image: url("./glyphicons/png/glyphicons-337-iphone-shake.png");
+}
+.glyph-pin-flag {
+	background-image: url("./glyphicons/png/glyphicons-338-pin-flag.png");
+}
+.glyph-turtle {
+	background-image: url("./glyphicons/png/glyphicons-339-turtle.png");
+}
+.glyph-luggage {
+	background-image: url("./glyphicons/png/glyphicons-34-luggage.png");
+}
+.glyph-rabbit {
+	background-image: url("./glyphicons/png/glyphicons-340-rabbit.png");
+}
+.glyph-globe {
+	background-image: url("./glyphicons/png/glyphicons-341-globe.png");
+}
+.glyph-briefcase {
+	background-image: url("./glyphicons/png/glyphicons-342-briefcase.png");
+}
+.glyph-hdd {
+	background-image: url("./glyphicons/png/glyphicons-343-hdd.png");
+}
+.glyph-thumbs-up {
+	background-image: url("./glyphicons/png/glyphicons-344-thumbs-up.png");
+}
+.glyph-thumbs-down {
+	background-image: url("./glyphicons/png/glyphicons-345-thumbs-down.png");
+}
+.glyph-hand-right {
+	background-image: url("./glyphicons/png/glyphicons-346-hand-right.png");
+}
+.glyph-hand-left {
+	background-image: url("./glyphicons/png/glyphicons-347-hand-left.png");
+}
+.glyph-hand-up {
+	background-image: url("./glyphicons/png/glyphicons-348-hand-up.png");
+}
+.glyph-hand-down {
+	background-image: url("./glyphicons/png/glyphicons-349-hand-down.png");
+}
+.glyph-old-man {
+	background-image: url("./glyphicons/png/glyphicons-35-old-man.png");
+}
+.glyph-fullscreen {
+	background-image: url("./glyphicons/png/glyphicons-350-fullscreen.png");
+}
+.glyph-shopping-bag {
+	background-image: url("./glyphicons/png/glyphicons-351-shopping-bag.png");
+}
+.glyph-book-open {
+	background-image: url("./glyphicons/png/glyphicons-352-book-open.png");
+}
+.glyph-nameplate {
+	background-image: url("./glyphicons/png/glyphicons-353-nameplate.png");
+}
+.glyph-nameplate-alt {
+	background-image: url("./glyphicons/png/glyphicons-354-nameplate-alt.png");
+}
+.glyph-vases {
+	background-image: url("./glyphicons/png/glyphicons-355-vases.png");
+}
+.glyph-bullhorn {
+	background-image: url("./glyphicons/png/glyphicons-356-bullhorn.png");
+}
+.glyph-dumbbell {
+	background-image: url("./glyphicons/png/glyphicons-357-dumbbell.png");
+}
+.glyph-suitcase {
+	background-image: url("./glyphicons/png/glyphicons-358-suitcase.png");
+}
+.glyph-file-import {
+	background-image: url("./glyphicons/png/glyphicons-359-file-import.png");
+}
+.glyph-woman {
+	background-image: url("./glyphicons/png/glyphicons-36-woman.png");
+}
+.glyph-file-export {
+	background-image: url("./glyphicons/png/glyphicons-360-file-export.png");
+}
+.glyph-bug {
+	background-image: url("./glyphicons/png/glyphicons-361-bug.png");
+}
+.glyph-crown {
+	background-image: url("./glyphicons/png/glyphicons-362-crown.png");
+}
+.glyph-smoking {
+	background-image: url("./glyphicons/png/glyphicons-363-smoking.png");
+}
+.glyph-cloud-upload {
+	background-image: url("./glyphicons/png/glyphicons-364-cloud-upload.png");
+}
+.glyph-cloud-download {
+	background-image: url("./glyphicons/png/glyphicons-365-cloud-download.png");
+}
+.glyph-restart {
+	background-image: url("./glyphicons/png/glyphicons-366-restart.png");
+}
+.glyph-security-camera {
+	background-image: url("./glyphicons/png/glyphicons-367-security-camera.png");
+}
+.glyph-expand {
+	background-image: url("./glyphicons/png/glyphicons-368-expand.png");
+}
+.glyph-collapse {
+	background-image: url("./glyphicons/png/glyphicons-369-collapse.png");
+}
+.glyph-file {
+	background-image: url("./glyphicons/png/glyphicons-37-file.png");
+}
+.glyph-collapse-top {
+	background-image: url("./glyphicons/png/glyphicons-370-collapse-top.png");
+}
+.glyph-globe-af {
+	background-image: url("./glyphicons/png/glyphicons-371-globe-af.png");
+}
+.glyph-global {
+	background-image: url("./glyphicons/png/glyphicons-372-global.png");
+}
+.glyph-spray {
+	background-image: url("./glyphicons/png/glyphicons-373-spray.png");
+}
+.glyph-nails {
+	background-image: url("./glyphicons/png/glyphicons-374-nails.png");
+}
+.glyph-claw-hammer {
+	background-image: url("./glyphicons/png/glyphicons-375-claw-hammer.png");
+}
+.glyph-classic-hammer {
+	background-image: url("./glyphicons/png/glyphicons-376-classic-hammer.png");
+}
+.glyph-hand-saw {
+	background-image: url("./glyphicons/png/glyphicons-377-hand-saw.png");
+}
+.glyph-riflescope {
+	background-image: url("./glyphicons/png/glyphicons-378-riflescope.png");
+}
+.glyph-electrical-socket-eu {
+	background-image: url("./glyphicons/png/glyphicons-379-electrical-socket-eu.png");
+}
+.glyph-coins {
+	background-image: url("./glyphicons/png/glyphicons-38-coins.png");
+}
+.glyph-electrical-socket-us {
+	background-image: url("./glyphicons/png/glyphicons-380-electrical-socket-us.png");
+}
+.glyph-message-forward {
+	background-image: url("./glyphicons/png/glyphicons-381-message-forward.png");
+}
+.glyph-coat-hanger {
+	background-image: url("./glyphicons/png/glyphicons-382-coat-hanger.png");
+}
+.glyph-dress {
+	background-image: url("./glyphicons/png/glyphicons-383-dress.png");
+}
+.glyph-bathrobe {
+	background-image: url("./glyphicons/png/glyphicons-384-bathrobe.png");
+}
+.glyph-shirt {
+	background-image: url("./glyphicons/png/glyphicons-385-shirt.png");
+}
+.glyph-underwear {
+	background-image: url("./glyphicons/png/glyphicons-386-underwear.png");
+}
+.glyph-log-in {
+	background-image: url("./glyphicons/png/glyphicons-387-log-in.png");
+}
+.glyph-log-out {
+	background-image: url("./glyphicons/png/glyphicons-388-log-out.png");
+}
+.glyph-exit {
+	background-image: url("./glyphicons/png/glyphicons-389-exit.png");
+}
+.glyph-plane {
+	background-image: url("./glyphicons/png/glyphicons-39-plane.png");
+}
+.glyph-new-window-alt {
+	background-image: url("./glyphicons/png/glyphicons-390-new-window-alt.png");
+}
+.glyph-video-sd {
+	background-image: url("./glyphicons/png/glyphicons-391-video-sd.png");
+}
+.glyph-video-hd {
+	background-image: url("./glyphicons/png/glyphicons-392-video-hd.png");
+}
+.glyph-subtitles {
+	background-image: url("./glyphicons/png/glyphicons-393-subtitles.png");
+}
+.glyph-sound-stereo {
+	background-image: url("./glyphicons/png/glyphicons-394-sound-stereo.png");
+}
+.glyph-sound-dolby {
+	background-image: url("./glyphicons/png/glyphicons-395-sound-dolby.png");
+}
+.glyph-sound-5-1 {
+	background-image: url("./glyphicons/png/glyphicons-396-sound-5-1.png");
+}
+.glyph-sound-6-1 {
+	background-image: url("./glyphicons/png/glyphicons-397-sound-6-1.png");
+}
+.glyph-sound-7-1 {
+	background-image: url("./glyphicons/png/glyphicons-398-sound-7-1.png");
+}
+.glyph-copyright-mark {
+	background-image: url("./glyphicons/png/glyphicons-399-copyright-mark.png");
+}
+.glyph-user {
+	background-image: url("./glyphicons/png/glyphicons-4-user.png");
+}
+.glyph-notes {
+	background-image: url("./glyphicons/png/glyphicons-40-notes.png");
+}
+.glyph-registration-mark {
+	background-image: url("./glyphicons/png/glyphicons-400-registration-mark.png");
+}
+.glyph-radar {
+	background-image: url("./glyphicons/png/glyphicons-401-radar.png");
+}
+.glyph-skateboard {
+	background-image: url("./glyphicons/png/glyphicons-402-skateboard.png");
+}
+.glyph-golf-course {
+	background-image: url("./glyphicons/png/glyphicons-403-golf-course.png");
+}
+.glyph-sorting {
+	background-image: url("./glyphicons/png/glyphicons-404-sorting.png");
+}
+.glyph-sort-by-alphabet {
+	background-image: url("./glyphicons/png/glyphicons-405-sort-by-alphabet.png");
+}
+.glyph-sort-by-alphabet-alt {
+	background-image: url("./glyphicons/png/glyphicons-406-sort-by-alphabet-alt.png");
+}
+.glyph-sort-by-order {
+	background-image: url("./glyphicons/png/glyphicons-407-sort-by-order.png");
+}
+.glyph-sort-by-order-alt {
+	background-image: url("./glyphicons/png/glyphicons-408-sort-by-order-alt.png");
+}
+.glyph-sort-by-attributes {
+	background-image: url("./glyphicons/png/glyphicons-409-sort-by-attributes.png");
+}
+.glyph-stats {
+	background-image: url("./glyphicons/png/glyphicons-41-stats.png");
+}
+.glyph-sort-by-attributes-alt {
+	background-image: url("./glyphicons/png/glyphicons-410-sort-by-attributes-alt.png");
+}
+.glyph-compressed {
+	background-image: url("./glyphicons/png/glyphicons-411-compressed.png");
+}
+.glyph-package {
+	background-image: url("./glyphicons/png/glyphicons-412-package.png");
+}
+.glyph-cloud-plus {
+	background-image: url("./glyphicons/png/glyphicons-413-cloud-plus.png");
+}
+.glyph-cloud-minus {
+	background-image: url("./glyphicons/png/glyphicons-414-cloud-minus.png");
+}
+.glyph-disk-save {
+	background-image: url("./glyphicons/png/glyphicons-415-disk-save.png");
+}
+.glyph-disk-open {
+	background-image: url("./glyphicons/png/glyphicons-416-disk-open.png");
+}
+.glyph-disk-saved {
+	background-image: url("./glyphicons/png/glyphicons-417-disk-saved.png");
+}
+.glyph-disk-remove {
+	background-image: url("./glyphicons/png/glyphicons-418-disk-remove.png");
+}
+.glyph-disk-import {
+	background-image: url("./glyphicons/png/glyphicons-419-disk-import.png");
+}
+.glyph-charts {
+	background-image: url("./glyphicons/png/glyphicons-42-charts.png");
+}
+.glyph-disk-export {
+	background-image: url("./glyphicons/png/glyphicons-420-disk-export.png");
+}
+.glyph-tower {
+	background-image: url("./glyphicons/png/glyphicons-421-tower.png");
+}
+.glyph-send {
+	background-image: url("./glyphicons/png/glyphicons-422-send.png");
+}
+.glyph-git-branch {
+	background-image: url("./glyphicons/png/glyphicons-423-git-branch.png");
+}
+.glyph-git-create {
+	background-image: url("./glyphicons/png/glyphicons-424-git-create.png");
+}
+.glyph-git-private {
+	background-image: url("./glyphicons/png/glyphicons-425-git-private.png");
+}
+.glyph-git-delete {
+	background-image: url("./glyphicons/png/glyphicons-426-git-delete.png");
+}
+.glyph-git-merge {
+	background-image: url("./glyphicons/png/glyphicons-427-git-merge.png");
+}
+.glyph-git-pull-request {
+	background-image: url("./glyphicons/png/glyphicons-428-git-pull-request.png");
+}
+.glyph-git-compare {
+	background-image: url("./glyphicons/png/glyphicons-429-git-compare.png");
+}
+.glyph-pie-chart {
+	background-image: url("./glyphicons/png/glyphicons-43-pie-chart.png");
+}
+.glyph-git-commit {
+	background-image: url("./glyphicons/png/glyphicons-430-git-commit.png");
+}
+.glyph-construction-cone {
+	background-image: url("./glyphicons/png/glyphicons-431-construction-cone.png");
+}
+.glyph-shoe-steps {
+	background-image: url("./glyphicons/png/glyphicons-432-shoe-steps.png");
+}
+.glyph-plus {
+	background-image: url("./glyphicons/png/glyphicons-433-plus.png");
+}
+.glyph-minus {
+	background-image: url("./glyphicons/png/glyphicons-434-minus.png");
+}
+.glyph-redo {
+	background-image: url("./glyphicons/png/glyphicons-435-redo.png");
+}
+.glyph-undo {
+	background-image: url("./glyphicons/png/glyphicons-436-undo.png");
+}
+.glyph-golf {
+	background-image: url("./glyphicons/png/glyphicons-437-golf.png");
+}
+.glyph-hockey {
+	background-image: url("./glyphicons/png/glyphicons-438-hockey.png");
+}
+.glyph-pipe {
+	background-image: url("./glyphicons/png/glyphicons-439-pipe.png");
+}
+.glyph-group {
+	background-image: url("./glyphicons/png/glyphicons-44-group.png");
+}
+.glyph-wrench {
+	background-image: url("./glyphicons/png/glyphicons-440-wrench.png");
+}
+.glyph-folder-closed {
+	background-image: url("./glyphicons/png/glyphicons-441-folder-closed.png");
+}
+.glyph-phone-alt {
+	background-image: url("./glyphicons/png/glyphicons-442-phone-alt.png");
+}
+.glyph-earphone {
+	background-image: url("./glyphicons/png/glyphicons-443-earphone.png");
+}
+.glyph-floppy-disk {
+	background-image: url("./glyphicons/png/glyphicons-444-floppy-disk.png");
+}
+.glyph-floppy-saved {
+	background-image: url("./glyphicons/png/glyphicons-445-floppy-saved.png");
+}
+.glyph-floppy-remove {
+	background-image: url("./glyphicons/png/glyphicons-446-floppy-remove.png");
+}
+.glyph-floppy-save {
+	background-image: url("./glyphicons/png/glyphicons-447-floppy-save.png");
+}
+.glyph-floppy-open {
+	background-image: url("./glyphicons/png/glyphicons-448-floppy-open.png");
+}
+.glyph-translate {
+	background-image: url("./glyphicons/png/glyphicons-449-translate.png");
+}
+.glyph-keys {
+	background-image: url("./glyphicons/png/glyphicons-45-keys.png");
+}
+.glyph-fax {
+	background-image: url("./glyphicons/png/glyphicons-450-fax.png");
+}
+.glyph-factory {
+	background-image: url("./glyphicons/png/glyphicons-451-factory.png");
+}
+.glyph-shop-window {
+	background-image: url("./glyphicons/png/glyphicons-452-shop-window.png");
+}
+.glyph-shop {
+	background-image: url("./glyphicons/png/glyphicons-453-shop.png");
+}
+.glyph-kiosk {
+	background-image: url("./glyphicons/png/glyphicons-454-kiosk.png");
+}
+.glyph-kiosk-wheels {
+	background-image: url("./glyphicons/png/glyphicons-455-kiosk-wheels.png");
+}
+.glyph-kiosk-light {
+	background-image: url("./glyphicons/png/glyphicons-456-kiosk-light.png");
+}
+.glyph-kiosk-food {
+	background-image: url("./glyphicons/png/glyphicons-457-kiosk-food.png");
+}
+.glyph-transfer {
+	background-image: url("./glyphicons/png/glyphicons-458-transfer.png");
+}
+.glyph-money {
+	background-image: url("./glyphicons/png/glyphicons-459-money.png");
+}
+.glyph-calendar {
+	background-image: url("./glyphicons/png/glyphicons-46-calendar.png");
+}
+.glyph-header {
+	background-image: url("./glyphicons/png/glyphicons-460-header.png");
+}
+.glyph-blacksmith {
+	background-image: url("./glyphicons/png/glyphicons-461-blacksmith.png");
+}
+.glyph-saw-blade {
+	background-image: url("./glyphicons/png/glyphicons-462-saw-blade.png");
+}
+.glyph-basketball {
+	background-image: url("./glyphicons/png/glyphicons-463-basketball.png");
+}
+.glyph-server {
+	background-image: url("./glyphicons/png/glyphicons-464-server.png");
+}
+.glyph-server-plus {
+	background-image: url("./glyphicons/png/glyphicons-465-server-plus.png");
+}
+.glyph-server-minus {
+	background-image: url("./glyphicons/png/glyphicons-466-server-minus.png");
+}
+.glyph-server-ban {
+	background-image: url("./glyphicons/png/glyphicons-467-server-ban.png");
+}
+.glyph-server-flag {
+	background-image: url("./glyphicons/png/glyphicons-468-server-flag.png");
+}
+.glyph-server-lock {
+	background-image: url("./glyphicons/png/glyphicons-469-server-lock.png");
+}
+.glyph-router {
+	background-image: url("./glyphicons/png/glyphicons-47-router.png");
+}
+.glyph-server-new {
+	background-image: url("./glyphicons/png/glyphicons-470-server-new.png");
+}
+.glyph-charging-station {
+	background-image: url("./glyphicons/png/glyphicons-471-charging-station.png");
+}
+.glyph-gas-station {
+	background-image: url("./glyphicons/png/glyphicons-472-gas-station.png");
+}
+.glyph-target {
+	background-image: url("./glyphicons/png/glyphicons-473-target.png");
+}
+.glyph-bed {
+	background-image: url("./glyphicons/png/glyphicons-474-bed.png");
+}
+.glyph-mosquito {
+	background-image: url("./glyphicons/png/glyphicons-475-mosquito.png");
+}
+.glyph-dining-set {
+	background-image: url("./glyphicons/png/glyphicons-476-dining-set.png");
+}
+.glyph-plate-of-food {
+	background-image: url("./glyphicons/png/glyphicons-477-plate-of-food.png");
+}
+.glyph-hygiene-kit {
+	background-image: url("./glyphicons/png/glyphicons-478-hygiene-kit.png");
+}
+.glyph-blackboard {
+	background-image: url("./glyphicons/png/glyphicons-479-blackboard.png");
+}
+.glyph-camera-small {
+	background-image: url("./glyphicons/png/glyphicons-48-camera-small.png");
+}
+.glyph-marriage {
+	background-image: url("./glyphicons/png/glyphicons-480-marriage.png");
+}
+.glyph-bucket {
+	background-image: url("./glyphicons/png/glyphicons-481-bucket.png");
+}
+.glyph-none-color-swatch {
+	background-image: url("./glyphicons/png/glyphicons-482-none-color-swatch.png");
+}
+.glyph-bring-forward {
+	background-image: url("./glyphicons/png/glyphicons-483-bring-forward.png");
+}
+.glyph-bring-to-front {
+	background-image: url("./glyphicons/png/glyphicons-484-bring-to-front.png");
+}
+.glyph-send-backward {
+	background-image: url("./glyphicons/png/glyphicons-485-send-backward.png");
+}
+.glyph-send-to-back {
+	background-image: url("./glyphicons/png/glyphicons-486-send-to-back.png");
+}
+.glyph-fit-frame-to-image {
+	background-image: url("./glyphicons/png/glyphicons-487-fit-frame-to-image.png");
+}
+.glyph-fit-image-to-frame {
+	background-image: url("./glyphicons/png/glyphicons-488-fit-image-to-frame.png");
+}
+.glyph-multiple-displays {
+	background-image: url("./glyphicons/png/glyphicons-489-multiple-displays.png");
+}
+.glyph-star-empty {
+	background-image: url("./glyphicons/png/glyphicons-49-star-empty.png");
+}
+.glyph-handshake {
+	background-image: url("./glyphicons/png/glyphicons-490-handshake.png");
+}
+.glyph-child {
+	background-image: url("./glyphicons/png/glyphicons-491-child.png");
+}
+.glyph-baby-formula {
+	background-image: url("./glyphicons/png/glyphicons-492-baby-formula.png");
+}
+.glyph-medicine {
+	background-image: url("./glyphicons/png/glyphicons-493-medicine.png");
+}
+.glyph-atv-vehicle {
+	background-image: url("./glyphicons/png/glyphicons-494-atv-vehicle.png");
+}
+.glyph-motorcycle {
+	background-image: url("./glyphicons/png/glyphicons-495-motorcycle.png");
+}
+.glyph-bed-alt {
+	background-image: url("./glyphicons/png/glyphicons-496-bed-alt.png");
+}
+.glyph-tent {
+	background-image: url("./glyphicons/png/glyphicons-497-tent.png");
+}
+.glyph-glasses {
+	background-image: url("./glyphicons/png/glyphicons-498-glasses.png");
+}
+.glyph-sunglasses {
+	background-image: url("./glyphicons/png/glyphicons-499-sunglasses.png");
+}
+.glyph-girl {
+	background-image: url("./glyphicons/png/glyphicons-5-girl.png");
+}
+.glyph-star {
+	background-image: url("./glyphicons/png/glyphicons-50-star.png");
+}
+.glyph-family {
+	background-image: url("./glyphicons/png/glyphicons-500-family.png");
+}
+.glyph-education {
+	background-image: url("./glyphicons/png/glyphicons-501-education.png");
+}
+.glyph-shoes {
+	background-image: url("./glyphicons/png/glyphicons-502-shoes.png");
+}
+.glyph-map {
+	background-image: url("./glyphicons/png/glyphicons-503-map.png");
+}
+.glyph-cd {
+	background-image: url("./glyphicons/png/glyphicons-504-cd.png");
+}
+.glyph-alert {
+	background-image: url("./glyphicons/png/glyphicons-505-alert.png");
+}
+.glyph-piggy-bank {
+	background-image: url("./glyphicons/png/glyphicons-506-piggy-bank.png");
+}
+.glyph-star-half {
+	background-image: url("./glyphicons/png/glyphicons-507-star-half.png");
+}
+.glyph-cluster {
+	background-image: url("./glyphicons/png/glyphicons-508-cluster.png");
+}
+.glyph-flowchart {
+	background-image: url("./glyphicons/png/glyphicons-509-flowchart.png");
+}
+.glyph-link {
+	background-image: url("./glyphicons/png/glyphicons-51-link.png");
+}
+.glyph-commodities {
+	background-image: url("./glyphicons/png/glyphicons-510-commodities.png");
+}
+.glyph-duplicate {
+	background-image: url("./glyphicons/png/glyphicons-511-duplicate.png");
+}
+.glyph-copy {
+	background-image: url("./glyphicons/png/glyphicons-512-copy.png");
+}
+.glyph-paste {
+	background-image: url("./glyphicons/png/glyphicons-513-paste.png");
+}
+.glyph-bath-bathtub {
+	background-image: url("./glyphicons/png/glyphicons-514-bath-bathtub.png");
+}
+.glyph-bath-shower {
+	background-image: url("./glyphicons/png/glyphicons-515-bath-shower.png");
+}
+.glyph-shower {
+	background-image: url("./glyphicons/png/glyphicons-516-shower.png");
+}
+.glyph-menu-hamburger {
+	background-image: url("./glyphicons/png/glyphicons-517-menu-hamburger.png");
+}
+.glyph-option-vertical {
+	background-image: url("./glyphicons/png/glyphicons-518-option-vertical.png");
+}
+.glyph-option-horizontal {
+	background-image: url("./glyphicons/png/glyphicons-519-option-horizontal.png");
+}
+.glyph-eye-open {
+	background-image: url("./glyphicons/png/glyphicons-52-eye-open.png");
+}
+.glyph-currency-conversion {
+	background-image: url("./glyphicons/png/glyphicons-520-currency-conversion.png");
+}
+.glyph-user-ban {
+	background-image: url("./glyphicons/png/glyphicons-521-user-ban.png");
+}
+.glyph-user-lock {
+	background-image: url("./glyphicons/png/glyphicons-522-user-lock.png");
+}
+.glyph-user-flag {
+	background-image: url("./glyphicons/png/glyphicons-523-user-flag.png");
+}
+.glyph-user-asterisk {
+	background-image: url("./glyphicons/png/glyphicons-524-user-asterisk.png");
+}
+.glyph-user-alert {
+	background-image: url("./glyphicons/png/glyphicons-525-user-alert.png");
+}
+.glyph-user-key {
+	background-image: url("./glyphicons/png/glyphicons-526-user-key.png");
+}
+.glyph-user-conversation {
+	background-image: url("./glyphicons/png/glyphicons-527-user-conversation.png");
+}
+.glyph-database {
+	background-image: url("./glyphicons/png/glyphicons-528-database.png");
+}
+.glyph-database-search {
+	background-image: url("./glyphicons/png/glyphicons-529-database-search.png");
+}
+.glyph-eye-close {
+	background-image: url("./glyphicons/png/glyphicons-53-eye-close.png");
+}
+.glyph-list-alt {
+	background-image: url("./glyphicons/png/glyphicons-530-list-alt.png");
+}
+.glyph-hazard-sign {
+	background-image: url("./glyphicons/png/glyphicons-531-hazard-sign.png");
+}
+.glyph-hazard {
+	background-image: url("./glyphicons/png/glyphicons-532-hazard.png");
+}
+.glyph-stop-sign {
+	background-image: url("./glyphicons/png/glyphicons-533-stop-sign.png");
+}
+.glyph-lab {
+	background-image: url("./glyphicons/png/glyphicons-534-lab.png");
+}
+.glyph-lab-alt {
+	background-image: url("./glyphicons/png/glyphicons-535-lab-alt.png");
+}
+.glyph-ice-cream {
+	background-image: url("./glyphicons/png/glyphicons-536-ice-cream.png");
+}
+.glyph-ice-lolly {
+	background-image: url("./glyphicons/png/glyphicons-537-ice-lolly.png");
+}
+.glyph-ice-lolly-tasted {
+	background-image: url("./glyphicons/png/glyphicons-538-ice-lolly-tasted.png");
+}
+.glyph-invoice {
+	background-image: url("./glyphicons/png/glyphicons-539-invoice.png");
+}
+.glyph-alarm {
+	background-image: url("./glyphicons/png/glyphicons-54-alarm.png");
+}
+.glyph-cart-tick {
+	background-image: url("./glyphicons/png/glyphicons-540-cart-tick.png");
+}
+.glyph-hourglass {
+	background-image: url("./glyphicons/png/glyphicons-541-hourglass.png");
+}
+.glyph-cat {
+	background-image: url("./glyphicons/png/glyphicons-542-cat.png");
+}
+.glyph-lamp {
+	background-image: url("./glyphicons/png/glyphicons-543-lamp.png");
+}
+.glyph-scale-classic {
+	background-image: url("./glyphicons/png/glyphicons-544-scale-classic.png");
+}
+.glyph-eye-plus {
+	background-image: url("./glyphicons/png/glyphicons-545-eye-plus.png");
+}
+.glyph-eye-minus {
+	background-image: url("./glyphicons/png/glyphicons-546-eye-minus.png");
+}
+.glyph-quote {
+	background-image: url("./glyphicons/png/glyphicons-547-quote.png");
+}
+.glyph-bitcoin {
+	background-image: url("./glyphicons/png/glyphicons-548-bitcoin.png");
+}
+.glyph-yen {
+	background-image: url("./glyphicons/png/glyphicons-549-yen.png");
+}
+.glyph-clock {
+	background-image: url("./glyphicons/png/glyphicons-55-clock.png");
+}
+.glyph-ruble {
+	background-image: url("./glyphicons/png/glyphicons-550-ruble.png");
+}
+.glyph-erase {
+	background-image: url("./glyphicons/png/glyphicons-551-erase.png");
+}
+.glyph-podcast {
+	background-image: url("./glyphicons/png/glyphicons-552-podcast.png");
+}
+.glyph-firework {
+	background-image: url("./glyphicons/png/glyphicons-553-firework.png");
+}
+.glyph-scale {
+	background-image: url("./glyphicons/png/glyphicons-554-scale.png");
+}
+.glyph-king {
+	background-image: url("./glyphicons/png/glyphicons-555-king.png");
+}
+.glyph-queen {
+	background-image: url("./glyphicons/png/glyphicons-556-queen.png");
+}
+.glyph-pawn {
+	background-image: url("./glyphicons/png/glyphicons-557-pawn.png");
+}
+.glyph-bishop {
+	background-image: url("./glyphicons/png/glyphicons-558-bishop.png");
+}
+.glyph-knight {
+	background-image: url("./glyphicons/png/glyphicons-559-knight.png");
+}
+.glyph-stopwatch {
+	background-image: url("./glyphicons/png/glyphicons-56-stopwatch.png");
+}
+.glyph-mic-mute {
+	background-image: url("./glyphicons/png/glyphicons-560-mic-mute.png");
+}
+.glyph-voicemail {
+	background-image: url("./glyphicons/png/glyphicons-561-voicemail.png");
+}
+.glyph-paragraph-alt {
+	background-image: url("./glyphicons/png/glyphicons-562-paragraph-alt.png");
+}
+.glyph-person-walking {
+	background-image: url("./glyphicons/png/glyphicons-563-person-walking.png");
+}
+.glyph-person-wheelchair {
+	background-image: url("./glyphicons/png/glyphicons-564-person-wheelchair.png");
+}
+.glyph-underground {
+	background-image: url("./glyphicons/png/glyphicons-565-underground.png");
+}
+.glyph-car-hov {
+	background-image: url("./glyphicons/png/glyphicons-566-car-hov.png");
+}
+.glyph-car-rental {
+	background-image: url("./glyphicons/png/glyphicons-567-car-rental.png");
+}
+.glyph-transport {
+	background-image: url("./glyphicons/png/glyphicons-568-transport.png");
+}
+.glyph-taxi {
+	background-image: url("./glyphicons/png/glyphicons-569-taxi.png");
+}
+.glyph-projector {
+	background-image: url("./glyphicons/png/glyphicons-57-projector.png");
+}
+.glyph-ice-cream-no {
+	background-image: url("./glyphicons/png/glyphicons-570-ice-cream-no.png");
+}
+.glyph-uk-rat-u {
+	background-image: url("./glyphicons/png/glyphicons-571-uk-rat-u.png");
+}
+.glyph-uk-rat-pg {
+	background-image: url("./glyphicons/png/glyphicons-572-uk-rat-pg.png");
+}
+.glyph-uk-rat-12a {
+	background-image: url("./glyphicons/png/glyphicons-573-uk-rat-12a.png");
+}
+.glyph-uk-rat-12 {
+	background-image: url("./glyphicons/png/glyphicons-574-uk-rat-12.png");
+}
+.glyph-uk-rat-15 {
+	background-image: url("./glyphicons/png/glyphicons-575-uk-rat-15.png");
+}
+.glyph-uk-rat-18 {
+	background-image: url("./glyphicons/png/glyphicons-576-uk-rat-18.png");
+}
+.glyph-uk-rat-r18 {
+	background-image: url("./glyphicons/png/glyphicons-577-uk-rat-r18.png");
+}
+.glyph-tv {
+	background-image: url("./glyphicons/png/glyphicons-578-tv.png");
+}
+.glyph-sms {
+	background-image: url("./glyphicons/png/glyphicons-579-sms.png");
+}
+.glyph-history {
+	background-image: url("./glyphicons/png/glyphicons-58-history.png");
+}
+.glyph-mms {
+	background-image: url("./glyphicons/png/glyphicons-580-mms.png");
+}
+.glyph-us-rat-g {
+	background-image: url("./glyphicons/png/glyphicons-581-us-rat-g.png");
+}
+.glyph-us-rat-pg {
+	background-image: url("./glyphicons/png/glyphicons-582-us-rat-pg.png");
+}
+.glyph-us-rat-pg-13 {
+	background-image: url("./glyphicons/png/glyphicons-583-us-rat-pg-13.png");
+}
+.glyph-us-rat-restricted {
+	background-image: url("./glyphicons/png/glyphicons-584-us-rat-restricted.png");
+}
+.glyph-us-rat-no-one-17 {
+	background-image: url("./glyphicons/png/glyphicons-585-us-rat-no-one-17.png");
+}
+.glyph-equalizer {
+	background-image: url("./glyphicons/png/glyphicons-586-equalizer.png");
+}
+.glyph-speakers {
+	background-image: url("./glyphicons/png/glyphicons-587-speakers.png");
+}
+.glyph-remote-control {
+	background-image: url("./glyphicons/png/glyphicons-588-remote-control.png");
+}
+.glyph-remote-control-tv {
+	background-image: url("./glyphicons/png/glyphicons-589-remote-control-tv.png");
+}
+.glyph-truck {
+	background-image: url("./glyphicons/png/glyphicons-59-truck.png");
+}
+.glyph-shredder {
+	background-image: url("./glyphicons/png/glyphicons-590-shredder.png");
+}
+.glyph-folder-heart {
+	background-image: url("./glyphicons/png/glyphicons-591-folder-heart.png");
+}
+.glyph-person-running {
+	background-image: url("./glyphicons/png/glyphicons-592-person-running.png");
+}
+.glyph-person {
+	background-image: url("./glyphicons/png/glyphicons-593-person.png");
+}
+.glyph-voice {
+	background-image: url("./glyphicons/png/glyphicons-594-voice.png");
+}
+.glyph-stethoscope {
+	background-image: url("./glyphicons/png/glyphicons-595-stethoscope.png");
+}
+.glyph-paired {
+	background-image: url("./glyphicons/png/glyphicons-596-paired.png");
+}
+.glyph-activity {
+	background-image: url("./glyphicons/png/glyphicons-597-activity.png");
+}
+.glyph-watch {
+	background-image: url("./glyphicons/png/glyphicons-598-watch.png");
+}
+.glyph-scissors-alt {
+	background-image: url("./glyphicons/png/glyphicons-599-scissors-alt.png");
+}
+.glyph-car {
+	background-image: url("./glyphicons/png/glyphicons-6-car.png");
+}
+.glyph-cargo {
+	background-image: url("./glyphicons/png/glyphicons-60-cargo.png");
+}
+.glyph-car-wheel {
+	background-image: url("./glyphicons/png/glyphicons-600-car-wheel.png");
+}
+.glyph-chevron-up {
+	background-image: url("./glyphicons/png/glyphicons-601-chevron-up.png");
+}
+.glyph-chevron-down {
+	background-image: url("./glyphicons/png/glyphicons-602-chevron-down.png");
+}
+.glyph-superscript {
+	background-image: url("./glyphicons/png/glyphicons-603-superscript.png");
+}
+.glyph-subscript {
+	background-image: url("./glyphicons/png/glyphicons-604-subscript.png");
+}
+.glyph-text-size {
+	background-image: url("./glyphicons/png/glyphicons-605-text-size.png");
+}
+.glyph-text-color {
+	background-image: url("./glyphicons/png/glyphicons-606-text-color.png");
+}
+.glyph-text-background {
+	background-image: url("./glyphicons/png/glyphicons-607-text-background.png");
+}
+.glyph-modal-window {
+	background-image: url("./glyphicons/png/glyphicons-608-modal-window.png");
+}
+.glyph-newspaper {
+	background-image: url("./glyphicons/png/glyphicons-609-newspaper.png");
+}
+.glyph-compass {
+	background-image: url("./glyphicons/png/glyphicons-61-compass.png");
+}
+.glyph-tractor {
+	background-image: url("./glyphicons/png/glyphicons-610-tractor.png");
+}
+.glyph-camping {
+	background-image: url("./glyphicons/png/glyphicons-611-camping.png");
+}
+.glyph-camping-benches {
+	background-image: url("./glyphicons/png/glyphicons-612-camping-benches.png");
+}
+.glyph-forest {
+	background-image: url("./glyphicons/png/glyphicons-613-forest.png");
+}
+.glyph-park {
+	background-image: url("./glyphicons/png/glyphicons-614-park.png");
+}
+.glyph-field {
+	background-image: url("./glyphicons/png/glyphicons-615-field.png");
+}
+.glyph-mountains {
+	background-image: url("./glyphicons/png/glyphicons-616-mountains.png");
+}
+.glyph-fees-payments {
+	background-image: url("./glyphicons/png/glyphicons-617-fees-payments.png");
+}
+.glyph-small-payments {
+	background-image: url("./glyphicons/png/glyphicons-618-small-payments.png");
+}
+.glyph-mixed-buildings {
+	background-image: url("./glyphicons/png/glyphicons-619-mixed-buildings.png");
+}
+.glyph-keynote {
+	background-image: url("./glyphicons/png/glyphicons-62-keynote.png");
+}
+.glyph-industrial-zone {
+	background-image: url("./glyphicons/png/glyphicons-620-industrial-zone.png");
+}
+.glyph-visitor-tag {
+	background-image: url("./glyphicons/png/glyphicons-621-visitor-tag.png");
+}
+.glyph-businessman {
+	background-image: url("./glyphicons/png/glyphicons-622-businessman.png");
+}
+.glyph-meditation {
+	background-image: url("./glyphicons/png/glyphicons-623-meditation.png");
+}
+.glyph-bath {
+	background-image: url("./glyphicons/png/glyphicons-624-bath.png");
+}
+.glyph-donate {
+	background-image: url("./glyphicons/png/glyphicons-625-donate.png");
+}
+.glyph-sauna {
+	background-image: url("./glyphicons/png/glyphicons-626-sauna.png");
+}
+.glyph-bedroom-nightstand {
+	background-image: url("./glyphicons/png/glyphicons-627-bedroom-nightstand.png");
+}
+.glyph-bedroom-lamp {
+	background-image: url("./glyphicons/png/glyphicons-628-bedroom-lamp.png");
+}
+.glyph-doctor {
+	background-image: url("./glyphicons/png/glyphicons-629-doctor.png");
+}
+.glyph-paperclip {
+	background-image: url("./glyphicons/png/glyphicons-63-paperclip.png");
+}
+.glyph-engineering-networks {
+	background-image: url("./glyphicons/png/glyphicons-630-engineering-networks.png");
+}
+.glyph-washing-machine {
+	background-image: url("./glyphicons/png/glyphicons-631-washing-machine.png");
+}
+.glyph-dryer {
+	background-image: url("./glyphicons/png/glyphicons-632-dryer.png");
+}
+.glyph-dishwasher {
+	background-image: url("./glyphicons/png/glyphicons-633-dishwasher.png");
+}
+.glyph-luggage-group {
+	background-image: url("./glyphicons/png/glyphicons-634-luggage-group.png");
+}
+.glyph-teenager {
+	background-image: url("./glyphicons/png/glyphicons-635-teenager.png");
+}
+.glyph-person-stick {
+	background-image: url("./glyphicons/png/glyphicons-636-person-stick.png");
+}
+.glyph-person-stick-old {
+	background-image: url("./glyphicons/png/glyphicons-637-person-stick-old.png");
+}
+.glyph-traveler {
+	background-image: url("./glyphicons/png/glyphicons-638-traveler.png");
+}
+.glyph-veteran {
+	background-image: url("./glyphicons/png/glyphicons-639-veteran.png");
+}
+.glyph-power {
+	background-image: url("./glyphicons/png/glyphicons-64-power.png");
+}
+.glyph-group-chat {
+	background-image: url("./glyphicons/png/glyphicons-640-group-chat.png");
+}
+.glyph-elections {
+	background-image: url("./glyphicons/png/glyphicons-641-elections.png");
+}
+.glyph-law-justice {
+	background-image: url("./glyphicons/png/glyphicons-642-law-justice.png");
+}
+.glyph-judiciary {
+	background-image: url("./glyphicons/png/glyphicons-643-judiciary.png");
+}
+.glyph-house-fire {
+	background-image: url("./glyphicons/png/glyphicons-644-house-fire.png");
+}
+.glyph-firefighters {
+	background-image: url("./glyphicons/png/glyphicons-645-firefighters.png");
+}
+.glyph-police {
+	background-image: url("./glyphicons/png/glyphicons-646-police.png");
+}
+.glyph-ambulance {
+	background-image: url("./glyphicons/png/glyphicons-647-ambulance.png");
+}
+.glyph-light-beacon {
+	background-image: url("./glyphicons/png/glyphicons-648-light-beacon.png");
+}
+.glyph-important-day {
+	background-image: url("./glyphicons/png/glyphicons-649-important-day.png");
+}
+.glyph-lightbulb {
+	background-image: url("./glyphicons/png/glyphicons-65-lightbulb.png");
+}
+.glyph-bike-park {
+	background-image: url("./glyphicons/png/glyphicons-650-bike-park.png");
+}
+.glyph-object-align-top {
+	background-image: url("./glyphicons/png/glyphicons-651-object-align-top.png");
+}
+.glyph-object-align-bottom {
+	background-image: url("./glyphicons/png/glyphicons-652-object-align-bottom.png");
+}
+.glyph-object-align-horizontal {
+	background-image: url("./glyphicons/png/glyphicons-653-object-align-horizontal.png");
+}
+.glyph-object-align-left {
+	background-image: url("./glyphicons/png/glyphicons-654-object-align-left.png");
+}
+.glyph-object-align-vertical {
+	background-image: url("./glyphicons/png/glyphicons-655-object-align-vertical.png");
+}
+.glyph-object-align-right {
+	background-image: url("./glyphicons/png/glyphicons-656-object-align-right.png");
+}
+.glyph-reflect-y {
+	background-image: url("./glyphicons/png/glyphicons-657-reflect-y.png");
+}
+.glyph-reflect-x {
+	background-image: url("./glyphicons/png/glyphicons-658-reflect-x.png");
+}
+.glyph-tick {
+	background-image: url("./glyphicons/png/glyphicons-659-tick.png");
+}
+.glyph-tag {
+	background-image: url("./glyphicons/png/glyphicons-66-tag.png");
+}
+.glyph-lawnmower {
+	background-image: url("./glyphicons/png/glyphicons-660-lawnmower.png");
+}
+.glyph-call-redirect {
+	background-image: url("./glyphicons/png/glyphicons-661-call-redirect.png");
+}
+.glyph-call-ip {
+	background-image: url("./glyphicons/png/glyphicons-662-call-ip.png");
+}
+.glyph-call-record {
+	background-image: url("./glyphicons/png/glyphicons-663-call-record.png");
+}
+.glyph-call-ringtone {
+	background-image: url("./glyphicons/png/glyphicons-664-call-ringtone.png");
+}
+.glyph-call-traffic {
+	background-image: url("./glyphicons/png/glyphicons-665-call-traffic.png");
+}
+.glyph-call-hold {
+	background-image: url("./glyphicons/png/glyphicons-666-call-hold.png");
+}
+.glyph-call-incoming {
+	background-image: url("./glyphicons/png/glyphicons-667-call-incoming.png");
+}
+.glyph-call-outgoing {
+	background-image: url("./glyphicons/png/glyphicons-668-call-outgoing.png");
+}
+.glyph-call-video {
+	background-image: url("./glyphicons/png/glyphicons-669-call-video.png");
+}
+.glyph-tags {
+	background-image: url("./glyphicons/png/glyphicons-67-tags.png");
+}
+.glyph-call-missed {
+	background-image: url("./glyphicons/png/glyphicons-670-call-missed.png");
+}
+.glyph-theater {
+	background-image: url("./glyphicons/png/glyphicons-671-theater.png");
+}
+.glyph-heartbeat {
+	background-image: url("./glyphicons/png/glyphicons-672-heartbeat.png");
+}
+.glyph-kettlebell {
+	background-image: url("./glyphicons/png/glyphicons-673-kettlebell.png");
+}
+.glyph-fireplace {
+	background-image: url("./glyphicons/png/glyphicons-674-fireplace.png");
+}
+.glyph-street-lights {
+	background-image: url("./glyphicons/png/glyphicons-675-street-lights.png");
+}
+.glyph-pedestrian {
+	background-image: url("./glyphicons/png/glyphicons-676-pedestrian.png");
+}
+.glyph-flood {
+	background-image: url("./glyphicons/png/glyphicons-677-flood.png");
+}
+.glyph-open-water {
+	background-image: url("./glyphicons/png/glyphicons-678-open-water.png");
+}
+.glyph-for-sale {
+	background-image: url("./glyphicons/png/glyphicons-679-for-sale.png");
+}
+.glyph-cleaning {
+	background-image: url("./glyphicons/png/glyphicons-68-cleaning.png");
+}
+.glyph-dustbin {
+	background-image: url("./glyphicons/png/glyphicons-680-dustbin.png");
+}
+.glyph-door {
+	background-image: url("./glyphicons/png/glyphicons-681-door.png");
+}
+.glyph-camp-fire {
+	background-image: url("./glyphicons/png/glyphicons-682-camp-fire.png");
+}
+.glyph-fleur-de-lis {
+	background-image: url("./glyphicons/png/glyphicons-683-fleur-de-lis.png");
+}
+.glyph-temperature-settings {
+	background-image: url("./glyphicons/png/glyphicons-684-temperature-settings.png");
+}
+.glyph-article {
+	background-image: url("./glyphicons/png/glyphicons-685-article.png");
+}
+.glyph-sunbath {
+	background-image: url("./glyphicons/png/glyphicons-686-sunbath.png");
+}
+.glyph-balanced-diet {
+	background-image: url("./glyphicons/png/glyphicons-687-balanced-diet.png");
+}
+.glyph-ticket {
+	background-image: url("./glyphicons/png/glyphicons-688-ticket.png");
+}
+.glyph-parking-ticket {
+	background-image: url("./glyphicons/png/glyphicons-689-parking-ticket.png");
+}
+.glyph-ruler {
+	background-image: url("./glyphicons/png/glyphicons-69-ruler.png");
+}
+.glyph-parking-meter {
+	background-image: url("./glyphicons/png/glyphicons-690-parking-meter.png");
+}
+.glyph-laptop {
+	background-image: url("./glyphicons/png/glyphicons-691-laptop.png");
+}
+.glyph-tree-structure {
+	background-image: url("./glyphicons/png/glyphicons-692-tree-structure.png");
+}
+.glyph-weather-warning {
+	background-image: url("./glyphicons/png/glyphicons-693-weather-warning.png");
+}
+.glyph-temperature-low {
+	background-image: url("./glyphicons/png/glyphicons-694-temperature-low.png");
+}
+.glyph-temperature-high {
+	background-image: url("./glyphicons/png/glyphicons-695-temperature-high.png");
+}
+.glyph-temperature-low-warning {
+	background-image: url("./glyphicons/png/glyphicons-696-temperature-low-warning.png");
+}
+.glyph-temperature-high-warning {
+	background-image: url("./glyphicons/png/glyphicons-697-temperature-high-warning.png");
+}
+.glyph-hurricane {
+	background-image: url("./glyphicons/png/glyphicons-698-hurricane.png");
+}
+.glyph-storm {
+	background-image: url("./glyphicons/png/glyphicons-699-storm.png");
+}
+.glyph-user-add {
+	background-image: url("./glyphicons/png/glyphicons-7-user-add.png");
+}
+.glyph-gift {
+	background-image: url("./glyphicons/png/glyphicons-70-gift.png");
+}
+.glyph-sorted-waste {
+	background-image: url("./glyphicons/png/glyphicons-700-sorted-waste.png");
+}
+.glyph-ear {
+	background-image: url("./glyphicons/png/glyphicons-701-ear.png");
+}
+.glyph-ear-deaf {
+	background-image: url("./glyphicons/png/glyphicons-702-ear-deaf.png");
+}
+.glyph-file-plus {
+	background-image: url("./glyphicons/png/glyphicons-703-file-plus.png");
+}
+.glyph-file-minus {
+	background-image: url("./glyphicons/png/glyphicons-704-file-minus.png");
+}
+.glyph-file-lock {
+	background-image: url("./glyphicons/png/glyphicons-705-file-lock.png");
+}
+.glyph-file-cloud {
+	background-image: url("./glyphicons/png/glyphicons-706-file-cloud.png");
+}
+.glyph-file-cloud-download {
+	background-image: url("./glyphicons/png/glyphicons-707-file-cloud-download.png");
+}
+.glyph-file-cloud-upload {
+	background-image: url("./glyphicons/png/glyphicons-708-file-cloud-upload.png");
+}
+.glyph-paragraph {
+	background-image: url("./glyphicons/png/glyphicons-709-paragraph.png");
+}
+.glyph-umbrella {
+	background-image: url("./glyphicons/png/glyphicons-71-umbrella.png");
+}
+.glyph-list-numbered {
+	background-image: url("./glyphicons/png/glyphicons-710-list-numbered.png");
+}
+.glyph-donate-heart {
+	background-image: url("./glyphicons/png/glyphicons-711-donate-heart.png");
+}
+.glyph-government {
+	background-image: url("./glyphicons/png/glyphicons-712-government.png");
+}
+.glyph-maze {
+	background-image: url("./glyphicons/png/glyphicons-713-maze.png");
+}
+.glyph-chronicle {
+	background-image: url("./glyphicons/png/glyphicons-714-chronicle.png");
+}
+.glyph-user-structure {
+	background-image: url("./glyphicons/png/glyphicons-715-user-structure.png");
+}
+.glyph-recycle {
+	background-image: url("./glyphicons/png/glyphicons-716-recycle.png");
+}
+.glyph-gas {
+	background-image: url("./glyphicons/png/glyphicons-717-gas.png");
+}
+.glyph-waste-pipe {
+	background-image: url("./glyphicons/png/glyphicons-718-waste-pipe.png");
+}
+.glyph-water-pipe {
+	background-image: url("./glyphicons/png/glyphicons-719-water-pipe.png");
+}
+.glyph-book {
+	background-image: url("./glyphicons/png/glyphicons-72-book.png");
+}
+.glyph-parking {
+	background-image: url("./glyphicons/png/glyphicons-720-parking.png");
+}
+.glyph-closed {
+	background-image: url("./glyphicons/png/glyphicons-721-closed.png");
+}
+.glyph-mouse {
+	background-image: url("./glyphicons/png/glyphicons-722-mouse.png");
+}
+.glyph-mouse-double-click {
+	background-image: url("./glyphicons/png/glyphicons-723-mouse-double-click.png");
+}
+.glyph-mouse-left-click {
+	background-image: url("./glyphicons/png/glyphicons-724-mouse-left-click.png");
+}
+.glyph-mouse-right-click {
+	background-image: url("./glyphicons/png/glyphicons-725-mouse-right-click.png");
+}
+.glyph-mouse-middle-click {
+	background-image: url("./glyphicons/png/glyphicons-726-mouse-middle-click.png");
+}
+.glyph-mouse-scroll {
+	background-image: url("./glyphicons/png/glyphicons-727-mouse-scroll.png");
+}
+.glyph-resize-vertical {
+	background-image: url("./glyphicons/png/glyphicons-728-resize-vertical.png");
+}
+.glyph-resize-horizontal {
+	background-image: url("./glyphicons/png/glyphicons-729-resize-horizontal.png");
+}
+.glyph-bookmark {
+	background-image: url("./glyphicons/png/glyphicons-73-bookmark.png");
+}
+.glyph-temperature {
+	background-image: url("./glyphicons/png/glyphicons-730-temperature.png");
+}
+.glyph-puzzle {
+	background-image: url("./glyphicons/png/glyphicons-731-puzzle.png");
+}
+.glyph-puzzle-2 {
+	background-image: url("./glyphicons/png/glyphicons-732-puzzle-2.png");
+}
+.glyph-puzzle-3 {
+	background-image: url("./glyphicons/png/glyphicons-733-puzzle-3.png");
+}
+.glyph-nearby-square {
+	background-image: url("./glyphicons/png/glyphicons-734-nearby-square.png");
+}
+.glyph-nearby-circle {
+	background-image: url("./glyphicons/png/glyphicons-735-nearby-circle.png");
+}
+.glyph-rotate-right {
+	background-image: url("./glyphicons/png/glyphicons-736-rotate-right.png");
+}
+.glyph-rotate-left {
+	background-image: url("./glyphicons/png/glyphicons-737-rotate-left.png");
+}
+.glyph-pictures {
+	background-image: url("./glyphicons/png/glyphicons-738-pictures.png");
+}
+.glyph-photo-album {
+	background-image: url("./glyphicons/png/glyphicons-739-photo-album.png");
+}
+.glyph-wifi {
+	background-image: url("./glyphicons/png/glyphicons-74-wifi.png");
+}
+.glyph-cadastral-map {
+	background-image: url("./glyphicons/png/glyphicons-740-cadastral-map.png");
+}
+.glyph-fingerprint-scan {
+	background-image: url("./glyphicons/png/glyphicons-741-fingerprint-scan.png");
+}
+.glyph-fingerprint {
+	background-image: url("./glyphicons/png/glyphicons-742-fingerprint.png");
+}
+.glyph-fingerprint-lock {
+	background-image: url("./glyphicons/png/glyphicons-743-fingerprint-lock.png");
+}
+.glyph-fingerprint-ok {
+	background-image: url("./glyphicons/png/glyphicons-744-fingerprint-ok.png");
+}
+.glyph-fingerprint-remove {
+	background-image: url("./glyphicons/png/glyphicons-745-fingerprint-remove.png");
+}
+.glyph-fingerprint-reload {
+	background-image: url("./glyphicons/png/glyphicons-746-fingerprint-reload.png");
+}
+.glyph-pending-notifications {
+	background-image: url("./glyphicons/png/glyphicons-747-pending-notifications.png");
+}
+.glyph-synchronization {
+	background-image: url("./glyphicons/png/glyphicons-748-synchronization.png");
+}
+.glyph-synchronization-ban {
+	background-image: url("./glyphicons/png/glyphicons-749-synchronization-ban.png");
+}
+.glyph-cup {
+	background-image: url("./glyphicons/png/glyphicons-75-cup.png");
+}
+.glyph-hash {
+	background-image: url("./glyphicons/png/glyphicons-750-hash.png");
+}
+.glyph-gender-male {
+	background-image: url("./glyphicons/png/glyphicons-751-gender-male.png");
+}
+.glyph-gender-female {
+	background-image: url("./glyphicons/png/glyphicons-752-gender-female.png");
+}
+.glyph-gender-virgin-female {
+	background-image: url("./glyphicons/png/glyphicons-753-gender-virgin-female.png");
+}
+.glyph-gender-intersex {
+	background-image: url("./glyphicons/png/glyphicons-754-gender-intersex.png");
+}
+.glyph-gender-transgender {
+	background-image: url("./glyphicons/png/glyphicons-755-gender-transgender.png");
+}
+.glyph-gender-ori-lesbian {
+	background-image: url("./glyphicons/png/glyphicons-756-gender-ori-lesbian.png");
+}
+.glyph-gender-ori-gay {
+	background-image: url("./glyphicons/png/glyphicons-757-gender-ori-gay.png");
+}
+.glyph-gender-ori-hetero {
+	background-image: url("./glyphicons/png/glyphicons-758-gender-ori-hetero.png");
+}
+.glyph-gender-other {
+	background-image: url("./glyphicons/png/glyphicons-759-gender-other.png");
+}
+.glyph-stroller {
+	background-image: url("./glyphicons/png/glyphicons-76-stroller.png");
+}
+.glyph-gender-unknown {
+	background-image: url("./glyphicons/png/glyphicons-760-gender-unknown.png");
+}
+.glyph-scanner {
+	background-image: url("./glyphicons/png/glyphicons-761-scanner.png");
+}
+.glyph-multifunction-printer {
+	background-image: url("./glyphicons/png/glyphicons-762-multifunction-printer.png");
+}
+.glyph-lasso {
+	background-image: url("./glyphicons/png/glyphicons-763-lasso.png");
+}
+.glyph-view-360 {
+	background-image: url("./glyphicons/png/glyphicons-764-view-360.png");
+}
+.glyph-battery-charging {
+	background-image: url("./glyphicons/png/glyphicons-765-battery-charging.png");
+}
+.glyph-battery-full {
+	background-image: url("./glyphicons/png/glyphicons-766-battery-full.png");
+}
+.glyph-battery-75 {
+	background-image: url("./glyphicons/png/glyphicons-767-battery-75.png");
+}
+.glyph-battery-50 {
+	background-image: url("./glyphicons/png/glyphicons-768-battery-50.png");
+}
+.glyph-battery-25 {
+	background-image: url("./glyphicons/png/glyphicons-769-battery-25.png");
+}
+.glyph-headphones {
+	background-image: url("./glyphicons/png/glyphicons-77-headphones.png");
+}
+.glyph-battery-10 {
+	background-image: url("./glyphicons/png/glyphicons-770-battery-10.png");
+}
+.glyph-satellite {
+	background-image: url("./glyphicons/png/glyphicons-771-satellite.png");
+}
+.glyph-satellite-dish {
+	background-image: url("./glyphicons/png/glyphicons-772-satellite-dish.png");
+}
+.glyph-satellite-dish-alt {
+	background-image: url("./glyphicons/png/glyphicons-773-satellite-dish-alt.png");
+}
+.glyph-auction {
+	background-image: url("./glyphicons/png/glyphicons-774-auction.png");
+}
+.glyph-directions {
+	background-image: url("./glyphicons/png/glyphicons-775-directions.png");
+}
+.glyph-race {
+	background-image: url("./glyphicons/png/glyphicons-776-race.png");
+}
+.glyph-robot {
+	background-image: url("./glyphicons/png/glyphicons-777-robot.png");
+}
+.glyph-ruler-alt {
+	background-image: url("./glyphicons/png/glyphicons-778-ruler-alt.png");
+}
+.glyph-cube-empty {
+	background-image: url("./glyphicons/png/glyphicons-779-cube-empty.png");
+}
+.glyph-headset {
+	background-image: url("./glyphicons/png/glyphicons-78-headset.png");
+}
+.glyph-cube-black {
+	background-image: url("./glyphicons/png/glyphicons-780-cube-black.png");
+}
+.glyph-move-square {
+	background-image: url("./glyphicons/png/glyphicons-781-move-square.png");
+}
+.glyph-drop {
+	background-image: url("./glyphicons/png/glyphicons-782-drop.png");
+}
+.glyph-vr-headset {
+	background-image: url("./glyphicons/png/glyphicons-783-vr-headset.png");
+}
+.glyph-vr-charging {
+	background-image: url("./glyphicons/png/glyphicons-784-vr-charging.png");
+}
+.glyph-vr-low-battery {
+	background-image: url("./glyphicons/png/glyphicons-785-vr-low-battery.png");
+}
+.glyph-vr-paired {
+	background-image: url("./glyphicons/png/glyphicons-786-vr-paired.png");
+}
+.glyph-vr-settings {
+	background-image: url("./glyphicons/png/glyphicons-787-vr-settings.png");
+}
+.glyph-vr-maintenance {
+	background-image: url("./glyphicons/png/glyphicons-788-vr-maintenance.png");
+}
+.glyph-filter-remove {
+	background-image: url("./glyphicons/png/glyphicons-789-filter-remove.png");
+}
+.glyph-warning-sign {
+	background-image: url("./glyphicons/png/glyphicons-79-warning-sign.png");
+}
+.glyph-filter-applied {
+	background-image: url("./glyphicons/png/glyphicons-790-filter-applied.png");
+}
+.glyph-one-day {
+	background-image: url("./glyphicons/png/glyphicons-791-one-day.png");
+}
+.glyph-user-vr {
+	background-image: url("./glyphicons/png/glyphicons-792-user-vr.png");
+}
+.glyph-user-vr-add {
+	background-image: url("./glyphicons/png/glyphicons-793-user-vr-add.png");
+}
+.glyph-user-vr-remove {
+	background-image: url("./glyphicons/png/glyphicons-794-user-vr-remove.png");
+}
+.glyph-dice-1 {
+	background-image: url("./glyphicons/png/glyphicons-795-dice-1.png");
+}
+.glyph-dice-2 {
+	background-image: url("./glyphicons/png/glyphicons-796-dice-2.png");
+}
+.glyph-dice-3 {
+	background-image: url("./glyphicons/png/glyphicons-797-dice-3.png");
+}
+.glyph-dice-4 {
+	background-image: url("./glyphicons/png/glyphicons-798-dice-4.png");
+}
+.glyph-dice-5 {
+	background-image: url("./glyphicons/png/glyphicons-799-dice-5.png");
+}
+.glyph-user-remove {
+	background-image: url("./glyphicons/png/glyphicons-8-user-remove.png");
+}
+.glyph-signal {
+	background-image: url("./glyphicons/png/glyphicons-80-signal.png");
+}
+.glyph-dice-6 {
+	background-image: url("./glyphicons/png/glyphicons-800-dice-6.png");
+}
+.glyph-retweet {
+	background-image: url("./glyphicons/png/glyphicons-81-retweet.png");
+}
+.glyph-refresh {
+	background-image: url("./glyphicons/png/glyphicons-82-refresh.png");
+}
+.glyph-roundabout {
+	background-image: url("./glyphicons/png/glyphicons-83-roundabout.png");
+}
+.glyph-random {
+	background-image: url("./glyphicons/png/glyphicons-84-random.png");
+}
+.glyph-heat {
+	background-image: url("./glyphicons/png/glyphicons-85-heat.png");
+}
+.glyph-repeat {
+	background-image: url("./glyphicons/png/glyphicons-86-repeat.png");
+}
+.glyph-display {
+	background-image: url("./glyphicons/png/glyphicons-87-display.png");
+}
+.glyph-log-book {
+	background-image: url("./glyphicons/png/glyphicons-88-log-book.png");
+}
+.glyph-address-book {
+	background-image: url("./glyphicons/png/glyphicons-89-address-book.png");
+}
+.glyph-film {
+	background-image: url("./glyphicons/png/glyphicons-9-film.png");
+}
+.glyph-building {
+	background-image: url("./glyphicons/png/glyphicons-90-building.png");
+}
+.glyph-eyedropper {
+	background-image: url("./glyphicons/png/glyphicons-91-eyedropper.png");
+}
+.glyph-adjust {
+	background-image: url("./glyphicons/png/glyphicons-92-adjust.png");
+}
+.glyph-tint {
+	background-image: url("./glyphicons/png/glyphicons-93-tint.png");
+}
+.glyph-crop {
+	background-image: url("./glyphicons/png/glyphicons-94-crop.png");
+}
+.glyph-vector-path-square {
+	background-image: url("./glyphicons/png/glyphicons-95-vector-path-square.png");
+}
+.glyph-vector-path-circle {
+	background-image: url("./glyphicons/png/glyphicons-96-vector-path-circle.png");
+}
+.glyph-vector-path-polygon {
+	background-image: url("./glyphicons/png/glyphicons-97-vector-path-polygon.png");
+}
+.glyph-vector-path-line {
+	background-image: url("./glyphicons/png/glyphicons-98-vector-path-line.png");
+}
+.glyph-vector-path-curve {
+	background-image: url("./glyphicons/png/glyphicons-99-vector-path-curve.png");
+}
+.glyph-pinterest {
+	background-image: url("./glyphicons/png/glyphicons-social-1-pinterest.png");
+}
+.glyph-wordpress {
+	background-image: url("./glyphicons/png/glyphicons-social-10-wordpress.png");
+}
+.glyph-instapaper {
+	background-image: url("./glyphicons/png/glyphicons-social-11-instapaper.png");
+}
+.glyph-evernote {
+	background-image: url("./glyphicons/png/glyphicons-social-12-evernote.png");
+}
+.glyph-xing {
+	background-image: url("./glyphicons/png/glyphicons-social-13-xing.png");
+}
+.glyph-e-mail-envelope {
+	background-image: url("./glyphicons/png/glyphicons-social-14-e-mail-envelope.png");
+}
+.glyph-dribbble {
+	background-image: url("./glyphicons/png/glyphicons-social-15-dribbble.png");
+}
+.glyph-deviantart {
+	background-image: url("./glyphicons/png/glyphicons-social-16-deviantart.png");
+}
+.glyph-read-it-later {
+	background-image: url("./glyphicons/png/glyphicons-social-17-read-it-later.png");
+}
+.glyph-linked-in {
+	background-image: url("./glyphicons/png/glyphicons-social-18-linked-in.png");
+}
+.glyph-gmail {
+	background-image: url("./glyphicons/png/glyphicons-social-19-gmail.png");
+}
+.glyph-dropbox {
+	background-image: url("./glyphicons/png/glyphicons-social-2-dropbox.png");
+}
+.glyph-pinboard {
+	background-image: url("./glyphicons/png/glyphicons-social-20-pinboard.png");
+}
+.glyph-behance {
+	background-image: url("./glyphicons/png/glyphicons-social-21-behance.png");
+}
+.glyph-github {
+	background-image: url("./glyphicons/png/glyphicons-social-22-github.png");
+}
+.glyph-youtube {
+	background-image: url("./glyphicons/png/glyphicons-social-23-youtube.png");
+}
+.glyph-open-id {
+	background-image: url("./glyphicons/png/glyphicons-social-24-open-id.png");
+}
+.glyph-foursquare {
+	background-image: url("./glyphicons/png/glyphicons-social-25-foursquare.png");
+}
+.glyph-quora {
+	background-image: url("./glyphicons/png/glyphicons-social-26-quora.png");
+}
+.glyph-badoo {
+	background-image: url("./glyphicons/png/glyphicons-social-27-badoo.png");
+}
+.glyph-spotify {
+	background-image: url("./glyphicons/png/glyphicons-social-28-spotify.png");
+}
+.glyph-stumbleupon {
+	background-image: url("./glyphicons/png/glyphicons-social-29-stumbleupon.png");
+}
+.glyph-google-plus {
+	background-image: url("./glyphicons/png/glyphicons-social-3-google-plus.png");
+}
+.glyph-readability {
+	background-image: url("./glyphicons/png/glyphicons-social-30-readability.png");
+}
+.glyph-facebook {
+	background-image: url("./glyphicons/png/glyphicons-social-31-facebook.png");
+}
+.glyph-twitter {
+	background-image: url("./glyphicons/png/glyphicons-social-32-twitter.png");
+}
+.glyph-instagram {
+	background-image: url("./glyphicons/png/glyphicons-social-33-instagram.png");
+}
+.glyph-posterous-spaces {
+	background-image: url("./glyphicons/png/glyphicons-social-34-posterous-spaces.png");
+}
+.glyph-vimeo {
+	background-image: url("./glyphicons/png/glyphicons-social-35-vimeo.png");
+}
+.glyph-flickr {
+	background-image: url("./glyphicons/png/glyphicons-social-36-flickr.png");
+}
+.glyph-last-fm {
+	background-image: url("./glyphicons/png/glyphicons-social-37-last-fm.png");
+}
+.glyph-rss {
+	background-image: url("./glyphicons/png/glyphicons-social-38-rss.png");
+}
+.glyph-skype {
+	background-image: url("./glyphicons/png/glyphicons-social-39-skype.png");
+}
+.glyph-jolicloud {
+	background-image: url("./glyphicons/png/glyphicons-social-4-jolicloud.png");
+}
+.glyph-e-mail {
+	background-image: url("./glyphicons/png/glyphicons-social-40-e-mail.png");
+}
+.glyph-vine {
+	background-image: url("./glyphicons/png/glyphicons-social-41-vine.png");
+}
+.glyph-myspace {
+	background-image: url("./glyphicons/png/glyphicons-social-42-myspace.png");
+}
+.glyph-goodreads {
+	background-image: url("./glyphicons/png/glyphicons-social-43-goodreads.png");
+}
+.glyph-apple {
+	background-image: url("./glyphicons/png/glyphicons-social-44-apple.png");
+}
+.glyph-windows {
+	background-image: url("./glyphicons/png/glyphicons-social-45-windows.png");
+}
+.glyph-yelp {
+	background-image: url("./glyphicons/png/glyphicons-social-46-yelp.png");
+}
+.glyph-playstation {
+	background-image: url("./glyphicons/png/glyphicons-social-47-playstation.png");
+}
+.glyph-xbox {
+	background-image: url("./glyphicons/png/glyphicons-social-48-xbox.png");
+}
+.glyph-android {
+	background-image: url("./glyphicons/png/glyphicons-social-49-android.png");
+}
+.glyph-yahoo {
+	background-image: url("./glyphicons/png/glyphicons-social-5-yahoo.png");
+}
+.glyph-ios {
+	background-image: url("./glyphicons/png/glyphicons-social-50-ios.png");
+}
+.glyph-wikipedia {
+	background-image: url("./glyphicons/png/glyphicons-social-51-wikipedia.png");
+}
+.glyph-pocket {
+	background-image: url("./glyphicons/png/glyphicons-social-52-pocket.png");
+}
+.glyph-steam {
+	background-image: url("./glyphicons/png/glyphicons-social-53-steam.png");
+}
+.glyph-soundcloud {
+	background-image: url("./glyphicons/png/glyphicons-social-54-soundcloud.png");
+}
+.glyph-slideshare {
+	background-image: url("./glyphicons/png/glyphicons-social-55-slideshare.png");
+}
+.glyph-netflix {
+	background-image: url("./glyphicons/png/glyphicons-social-56-netflix.png");
+}
+.glyph-paypal {
+	background-image: url("./glyphicons/png/glyphicons-social-57-paypal.png");
+}
+.glyph-google-drive {
+	background-image: url("./glyphicons/png/glyphicons-social-58-google-drive.png");
+}
+.glyph-linux-foundation {
+	background-image: url("./glyphicons/png/glyphicons-social-59-linux-foundation.png");
+}
+.glyph-blogger {
+	background-image: url("./glyphicons/png/glyphicons-social-6-blogger.png");
+}
+.glyph-ebay {
+	background-image: url("./glyphicons/png/glyphicons-social-60-ebay.png");
+}
+.glyph-bitbucket {
+	background-image: url("./glyphicons/png/glyphicons-social-61-bitbucket.png");
+}
+.glyph-whatsapp {
+	background-image: url("./glyphicons/png/glyphicons-social-62-whatsapp.png");
+}
+.glyph-buffer {
+	background-image: url("./glyphicons/png/glyphicons-social-63-buffer.png");
+}
+.glyph-medium {
+	background-image: url("./glyphicons/png/glyphicons-social-64-medium.png");
+}
+.glyph-stackoverflow {
+	background-image: url("./glyphicons/png/glyphicons-social-65-stackoverflow.png");
+}
+.glyph-linux {
+	background-image: url("./glyphicons/png/glyphicons-social-66-linux.png");
+}
+.glyph-vk {
+	background-image: url("./glyphicons/png/glyphicons-social-67-vk.png");
+}
+.glyph-snapchat {
+	background-image: url("./glyphicons/png/glyphicons-social-68-snapchat.png");
+}
+.glyph-etsy {
+	background-image: url("./glyphicons/png/glyphicons-social-69-etsy.png");
+}
+.glyph-picasa {
+	background-image: url("./glyphicons/png/glyphicons-social-7-picasa.png");
+}
+.glyph-stackexchange {
+	background-image: url("./glyphicons/png/glyphicons-social-70-stackexchange.png");
+}
+.glyph-amazon {
+	background-image: url("./glyphicons/png/glyphicons-social-8-amazon.png");
+}
+.glyph-tumblr {
+	background-image: url("./glyphicons/png/glyphicons-social-9-tumblr.png");
+}

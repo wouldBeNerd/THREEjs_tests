@@ -24,7 +24,7 @@ class ThreeScene extends Component{
 
     this.setState( {...this.state, ...{
       canvasElement : document.querySelector(`#${this.props.id}`),
-      resizeDicOccur : true
+      // resizeDicOccur : true
     }}, 
       ()=>{
         const width = this.mount.width
