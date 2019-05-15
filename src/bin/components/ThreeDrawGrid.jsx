@@ -139,9 +139,16 @@ class ThreeDrawGrid extends Component{
             left: "0px", 
             opacity: 0.9, 
             zIndex: 10000
-        }}>
-                <input className="form-control form-control-sm" type="number" value={this.state.grid.step} onChange={this.set_prop("grid", "step", "number", this.draw_grid)}/>
-                <input className="form-control form-control-sm" type="number" value={this.state.grid.size} onChange={this.set_prop("grid", "size", "number", this.draw_grid)}/>
+        }} className="container">
+            <div className="row">
+
+                <input min="1" className="col col-sm-1 bg-dark text-white form-control form-control-sm" 
+                    type="number" value={this.state.grid.step} onChange={this.set_prop("grid", "step", "number", this.draw_grid)}
+                />
+                <input min="1"  className="col col-sm-1 bg-dark text-white form-control form-control-sm" 
+                    type="number" value={this.state.grid.size} onChange={this.set_prop("grid", "size", "number", this.draw_grid)}
+                />
+            </div>
 
         </div>
 
