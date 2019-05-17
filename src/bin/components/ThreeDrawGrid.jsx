@@ -7,24 +7,65 @@ import parse_type from "../workers/parse_type"
 import MakeTextSprite from "../threeJS_extensions/build/MakeTextSprite"
 import red_dot from "../../assets/red_dot.png"
 
-
+const text_scales = [
+    { width_scale : 2.20, height_scale :	1.1,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 4.4, height_scale :	2.2,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 8, height_scale :	4,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 10, height_scale : 5,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 14, height_scale :	7,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+]
+const red_dot_scales = [
+    {x : 0.03, y : 0.03 },
+    {x : 0.06, y : 0.06 },
+    {x : 0.09, y : 0.09 },
+    {x : 0.12, y : 0.12 },
+    {x : 0.15, y : 0.15 },
+    {x : 0.18, y : 0.18 },
+    {x : 0.21, y : 0.21 },
+    {x : 0.24, y : 0.24 },
+    {x : 0.27, y : 0.27 },
+    {x : 0.3, y : 0.3 },
+    {x : 0.33, y : 0.33 },
+    {x : 0.36, y : 0.36 },
+    {x : 0.39, y : 0.39 },
+    {x : 0.42, y : 0.42 },
+    {x : 0.45, y : 0.45 },
+    {x : 0.48, y : 0.48 },
+    {x : 0.51, y : 0.51 },
+    {x : 0.54, y : 0.54 },
+    {x : 0.57, y : 0.57 },
+    {x : 0.6, y : 0.6 },    
+    {x : 0.63, y : 0.63 },    
+    {x : 0.69, y : 0.69 },    
+    {x : 0.72, y : 0.72 },    
+    {x : 0.75, y : 0.75 },    
+]
 
 
 class ThreeDrawGrid extends Component{
     state = {
         canvasElement : document.querySelector(`#${this.props.id}`),
-        grid : {
-            size : 10,
-            step : 1,
-            grid : null,
-            interactive_points : []
-        },
+        // grid : {
+        //     size : 10,
+        //     step : 1,
+        //     grid : null,
+        //     interactive_points : []
+        // },
         mouse : {
             x : 0,
             y : 0,
-            snap_increment : 1,/*value indicated the nearest increment to round to (1,2,5) */
-            snap_decimal : 1,/*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/
+            snap_increment : 1,// ! DO NOT SET TO 0 /* value indicated the nearest increment to round to (1,2,5) */
+            snap_decimal : 1,// ! DO NOT SET TO 0 /*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/
             snap_point : false,
+        },
+        red_dot : {
+            TObj : null,
+            scale_i : 1,
+        },
+        ruler : {
+            text_scale_i : 1,/**defined which scaling object to get from text_scale */
+            texts_x : [],
+            texts_z : [],
         },
         live_ruler : {
             red:null,/** x axis */
@@ -42,7 +83,7 @@ class ThreeDrawGrid extends Component{
         },
         camera : {
             x: 0,
-            y: 40,
+            y: 60,
             z: 0,
             look_x: 0,
             look_y: 0,
@@ -65,12 +106,14 @@ class ThreeDrawGrid extends Component{
         this.set_prop = this.set_prop.bind(this)
         this.new_or_state = this.new_or_state.bind(this)
         this.remove_from_scene = this.remove_from_scene.bind(this)
-        this.draw_grid = this.draw_grid.bind(this)
         this.draw_plane = this.draw_plane.bind(this)
         this.draw_plane_rulers = this.draw_plane_rulers.bind(this)
         this.draw_red_dot = this.draw_red_dot.bind(this)
         this.on_mouse_move = this.on_mouse_move.bind(this)
         this.loc_parse = this.loc_parse.bind(this)
+        this.draw_2_point_ruler = this.draw_2_point_ruler.bind(this)
+        this.update_ruler_text_scales = this.update_ruler_text_scales.bind(this)
+        this.update_red_dot_scale = this.update_red_dot_scale.bind(this)
     }
     _isMounted = false
     componentDidMount(){
@@ -131,6 +174,47 @@ class ThreeDrawGrid extends Component{
             camera.lookAt( new THREE.Vector3( this.state.camera.look_x, this.state.camera.look_y, this.state.camera.look_z ) )
         }
 
+        let red_dot_i = Math.floor( this.state.camera.y / 10 )
+        if(red_dot_i !== this.state.red_dot.scale_i && this.state.red_dot.TObj !== null ){
+            let new_state = {...this.state}
+            new_state.red_dot.scale_i = red_dot_i
+            this.setState(new_state, ()=>{
+                this.update_red_dot_scale()
+            })
+        }
+
+
+        let new_scale_i = Math.floor( this.state.camera.y / 50 )
+        if(new_scale_i !== this.state.ruler.text_scale_i && this.state.ruler.texts_x.children !== undefined && this.state.ruler.texts_z.children !== undefined){
+            let new_state = {...this.state}
+            new_state.ruler.text_scale_i = new_scale_i
+            this.setState(new_state, ()=>{
+                this.update_ruler_text_scales()
+            })
+        }
+
+    }
+    update_ruler_text_scales(){
+        /**reapply the scale and align ratio of all texts in texts_x and texts_y */
+        let scale = text_scales[ this.state.ruler.text_scale_i  ]
+        console.log("scaling", scale)
+        let { alignV2_x, alignV2_z, width_scale, height_scale} = scale
+        let new_ruler_texts_x = this.state.ruler.texts_x.children.map( text => {
+            text.center = alignV2_x
+            text.scale.set( width_scale , height_scale)   
+            // text.verticesNeedUpdate = true
+            return text
+        })
+        let new_ruler_texts_z = this.state.ruler.texts_z.children.map( text => {
+            text.center = alignV2_z
+            text.scale.set( width_scale , height_scale)   
+            // text.verticesNeedUpdate = true
+            return text
+        })        
+    }
+    update_red_dot_scale(){
+        let new_scale = red_dot_scales[ this.state.red_dot.scale_i ]
+        this.state.red_dot.TObj.scale.set( new_scale.x, new_scale.y, 0.2 )
     }
     init3D(){
 
@@ -178,28 +262,37 @@ class ThreeDrawGrid extends Component{
         })//callback after setstate
         // this.render3D()
     }
-    text_sprite( message, {width_ratio=2, height=1.5, alignV2=new THREE.Vector2(0,1), textColor = {r:255, g:255, b:255, a:1}} ){
+    text_sprite( message, { width_scale=2, height_scale=1.5, alignV2=new THREE.Vector2(0,1), textColor = {r:255, g:255, b:255, a:1}, sizeAttenuation=true} ){
         // TODO depending on the z location of camera the scale of the letters must be adjusted 
-        let sprite = MakeTextSprite( message, { textColor} )
+        let sprite = MakeTextSprite( message, { textColor, sizeAttenuation } )
         // textSprite.rotation.x = Math.PI / 2
         // sprite.position.set(0, 1, 0)
         sprite.center = alignV2
-        sprite.scale.set( width_ratio * height, height)   
+        sprite.scale.set( width_scale , height_scale)   
         return sprite
         // this.scene.add(sprite)
     }
+    draw_2_point_ruler( cb ){
+        
+    }
     draw_plane_rulers( cb ){
+
+        /**get text scale */
+        let scale_i = this.state.ruler.text_scale_i
+        let scale = text_scales[scale_i]
+
         let w_m = this.state.plane.width / 2
         let h_m = this.state.plane.height / 2
-        let w_dm = this.state.plane.width * 10 / 2
-        let h_dm = this.state.plane.height * 10 / 2
-        let w_cm = this.state.plane.width * 100 / 2
-        let h_cm = this.state.plane.height * 100 / 2
-        let start_p = 0
+        // let w_dm = this.state.plane.width * 10 / 2
+        // let h_dm = this.state.plane.height * 10 / 2
+        // let w_cm = this.state.plane.width * 100 / 2
+        // let h_cm = this.state.plane.height * 100 / 2
+        // let start_p = 0
         // ! we are iterating half only, so we must add negative as well as positive points at the same time
         let m_geo = new THREE.Geometry();
         let m_mat = new THREE.LineBasicMaterial({color:0xffffff, opacity : 0.6, transparent:false, linewidth : 10})
-        let text_group = new THREE.Group()
+        let texts_x = new THREE.Group()
+        let texts_z = new THREE.Group()
         //width lines and width texts
         for(let i = 0; i < w_m; i++){
             let modulo = i % 10
@@ -207,22 +300,22 @@ class ThreeDrawGrid extends Component{
             if( modulo === 0 ){//0, 10, 20...
                 length = 0.25
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0.1, 1)})
+                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_x, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( i , 0.001, length )
                     neg_text.position.set( -i , 0.001, length )
-                    text_group.add(text)                
-                    text_group.add(neg_text)                
+                    texts_x.add(text)                
+                    texts_x.add(neg_text)            
                 }
             }else if( modulo === 5){//5, 15, 25, ...
                 length = 0.15
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0.1, 1)})
+                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_x, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( i , 0.001, length )
                     neg_text.position.set( -i , 0.001, length )
-                    text_group.add(text)                
-                    text_group.add(neg_text)                
+                    texts_x.add(text)                
+                    texts_x.add(neg_text)                                   
                 }
             }
             m_geo.vertices.push( new THREE.Vector3( i , 0.001, length));
@@ -238,22 +331,22 @@ class ThreeDrawGrid extends Component{
             if( modulo === 0 ){//0, 10, 20...
                 length = 0.25
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0, 0.8)})
+                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_z, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( length , 0.001, i )
                     neg_text.position.set( length , 0.001, -i )
-                    text_group.add(text)                
-                    text_group.add(neg_text)                
+                    texts_z.add(text)                
+                    texts_z.add(neg_text)                 
                 }
             }else if( modulo === 5){//5, 15, 25, ...
                 length = 0.15
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0, 0.8)})
+                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_z, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( length , 0.001, i )
                     neg_text.position.set( length , 0.001, -i )
-                    text_group.add(text)                
-                    text_group.add(neg_text)                
+                    texts_z.add(text)                
+                    texts_z.add(neg_text)                                    
                 }
             }
             m_geo.vertices.push( new THREE.Vector3( length , 0.001, i));
@@ -266,9 +359,13 @@ class ThreeDrawGrid extends Component{
 
         let m_ruler = new THREE.LineSegments( m_geo, m_mat ) 
         this.scene.add(m_ruler);
-        this.scene.add(text_group)
+        this.scene.add(texts_x)
+        this.scene.add(texts_z)
+        let new_state = {...this.state}
+        new_state.ruler.texts_x = texts_x
+        new_state.ruler.texts_z = texts_z
 
-        cb()
+        this.setState(new_state, cb)// ! /*KEEP LAST AS IT CONTAINS CALLBACK */
     }
     draw_red_dot( cb ){
 
@@ -280,6 +377,9 @@ class ThreeDrawGrid extends Component{
         sprite.position.set( 0,0.1,0)
         this.red_dot = sprite;
         this.scene.add( sprite );
+        
+        let new_state = {...this.state}
+        new_state.red_dot.TObj = sprite
 
         cb()
     }
@@ -302,68 +402,9 @@ class ThreeDrawGrid extends Component{
             cb()
         })
     }
-    draw_grid(){
-        let scene = this.scene
-        //remove from scene if grid exists
-        this.remove_from_scene( "grid", scene)
-        this.state.grid.interactive_points.forEach( (gp, gi)=> this.remove_from_scene( `gridp${gi}`, scene))
-        //redraw new grid
-        let size = this.state.grid.size+0, step = this.state.grid.step+0;
-        console.log(size, step)
-        let geometry = new THREE.Geometry();
-        let material = new THREE.LineBasicMaterial({color:0x333333, opacity : 0.3, transparent:false, linewidth : 10})
 
-        for(let i = -size; i <= size; i += step){
-
-            geometry.vertices.push( new THREE.Vector3( -size , - 0.04, i));
-            geometry.vertices.push( new THREE.Vector3(  size , - 0.04, i));
-
-            geometry.vertices.push( new THREE.Vector3( i , - 0.04, -size));
-            geometry.vertices.push( new THREE.Vector3( i , - 0.04,  size));
-
-        }
-
-        let grid = new THREE.LineSegments( geometry, material ) 
-        grid.name = "grid"
-
-
-        scene.add(grid);
-
-
-        let points = new Array((size * 2) / step).fill(0).map( (zero, i) => i * step + (-size) )
-        points.push(size)//add the last size one
-        let interactive_points = []
-        
-        let sphere_geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
-        points.forEach( (ptx, xi) => {
-            points.forEach( (ptz, zi) => {
-                let sphere_material = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0})
-                // let geometry = new THREE.Sphere(new THREE.Vector3(ptx, -0.04, ptz), 0.3);
-                let mesh = new THREE.Mesh(sphere_geometry, sphere_material)
-                mesh.position.set( ptx, -0.02, ptz )
-                mesh.name = `gridp${xi+zi}`
-                scene.add(mesh)
-                interactive_points.push(mesh)
-            })
-        })
-
-
-        let new_state = this.state
-        new_state.grid.grid = grid
-        new_state.grid.interactive_points = interactive_points
-        this.setState( new_state ,()=>{
-            console.log("redrew grid")
-            geometry.dispose()
-            material.dispose()
-            this.start()
-        })
-
-
-    }
     start = () => {
         
-
-
         if (!this.frameId && this._isMounted) {
           this.frameId = requestAnimationFrame(this.animate)
         }
@@ -434,15 +475,11 @@ class ThreeDrawGrid extends Component{
             opacity: 0.9, 
             zIndex: 10000
         }} className="container">
-            <div className="row">
-                <div className="col col-sm-1 text-white" >{`x:${this.state.mouse.x}`}</div>
-                <div className="col col-sm-1 text-white" >{`y:${this.state.mouse.y}`}</div>
-                {/* <input min="1" className="col col-sm-1 bg-dark text-white form-control form-control-sm" 
-                    type="number" value={this.state.grid.step} onChange={this.set_prop("grid", "step", "number", this.draw_grid)}
-                />
-                <input min="1"  className="col col-sm-1 bg-dark text-white form-control form-control-sm" 
-                    type="number" value={this.state.grid.size} onChange={this.set_prop("grid", "size", "number", this.draw_grid)}
-                /> */}
+            <div className="row col col-sm-3 ">
+                <div className="col col-sm text-white" >{`Camera X:${this.state.camera.x} Y:${this.state.camera.y} Z:${this.state.camera.z}`}</div>
+            </div>
+            <div className="row col col-sm-3 ">
+                <div className="col col-sm text-white" >{`Mouse X:${this.state.mouse.x} Y:${this.state.mouse.y}`}</div>
             </div>
             <div className="row col col-sm-3 ">
                 <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center">
@@ -482,6 +519,31 @@ class ThreeDrawGrid extends Component{
                     />
                 </div>                       
             </div>            
+            <div className="row col col-sm-3 input-group ">   
+                <div className="col text-white text-left border-light bg-dark border d-flex align-items-start justify-content-center p-0">
+                    <div className="col p-0 m-0" >
+                        <button className="btn btn-dark btn-sm border-none pt-0" type="button" data-reactroot=""
+                            // onClick={ this.set_prop("camera", "y", "number", ()=>{}, ()=>{ return this.state.camera.y - 5} )}
+                        >
+                            <span className="glyph glyph-mountain_small glyph-small glyph-white align-middle">
+                            </span>
+                        </button>
+                    </div>
+                    <div className="col col-8 pl-0 pr-0" >
+                        <input type="range" className="form-control p-1" min={5} max={200} 
+                         value = { this.state.camera.y }
+                         onChange={ this.set_prop("camera", "y", "number", this.update_camera )}
+                        
+                        />
+                    </div>
+                    <div className="col p-0 m-0" >
+                        <button className="btn btn-dark btn-sm border-none pt-0" type="button" data-reactroot="">
+                            <span className="glyph glyph-mountain_large glyph-small glyph-white align-middle">
+                            </span>
+                        </button>
+                    </div>                 
+                </div>
+            </div>
         </div>
 
 
@@ -506,3 +568,68 @@ ThreeDrawGrid.propTypes = {
   
   }
   export default ThreeDrawGrid
+
+  /** DEPRECATED
+   * 
+   * ZDEP draw_grid
+```jsx
+    draw_grid(){
+        let scene = this.scene
+        //remove from scene if grid exists
+        this.remove_from_scene( "grid", scene)
+        this.state.grid.interactive_points.forEach( (gp, gi)=> this.remove_from_scene( `gridp${gi}`, scene))
+        //redraw new grid
+        let size = this.state.grid.size+0, step = this.state.grid.step+0;
+        console.log(size, step)
+        let geometry = new THREE.Geometry();
+        let material = new THREE.LineBasicMaterial({color:0x333333, opacity : 0.3, transparent:false, linewidth : 10})
+
+        for(let i = -size; i <= size; i += step){
+
+            geometry.vertices.push( new THREE.Vector3( -size , - 0.04, i));
+            geometry.vertices.push( new THREE.Vector3(  size , - 0.04, i));
+
+            geometry.vertices.push( new THREE.Vector3( i , - 0.04, -size));
+            geometry.vertices.push( new THREE.Vector3( i , - 0.04,  size));
+
+        }
+
+        let grid = new THREE.LineSegments( geometry, material ) 
+        grid.name = "grid"
+
+
+        scene.add(grid);
+
+
+        let points = new Array((size * 2) / step).fill(0).map( (zero, i) => i * step + (-size) )
+        points.push(size)//add the last size one
+        let interactive_points = []
+        
+        let sphere_geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
+        points.forEach( (ptx, xi) => {
+            points.forEach( (ptz, zi) => {
+                let sphere_material = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0})
+                // let geometry = new THREE.Sphere(new THREE.Vector3(ptx, -0.04, ptz), 0.3);
+                let mesh = new THREE.Mesh(sphere_geometry, sphere_material)
+                mesh.position.set( ptx, -0.02, ptz )
+                mesh.name = `gridp${xi+zi}`
+                scene.add(mesh)
+                interactive_points.push(mesh)
+            })
+        })
+
+
+        let new_state = this.state
+        new_state.grid.grid = grid
+        new_state.grid.interactive_points = interactive_points
+        this.setState( new_state ,()=>{
+            console.log("redrew grid")
+            geometry.dispose()
+            material.dispose()
+            this.start()
+        })
+
+
+    }
+```
+   */

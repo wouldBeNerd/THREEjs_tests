@@ -20,7 +20,7 @@ function roundRect(ctx, x, y, w, h, r)
 /**render sprite like numbers on screen
  * 
  * @param {string} message 
- * @param {{fontsize:number, fontface:string, border:boolean borderThickness:number, textColor:{r:number, g:number, b:number, a:number }, borderColor:{r:number, g:number, b:number, a:number }, backgroundColor:{r:number, g:number, b:number, a:number }}} opts 
+ * @param {{sizeAttenuation:boolean, fontsize:number, fontface:string, border:boolean borderThickness:number, textColor:{r:number, g:number, b:number, a:number }, borderColor:{r:number, g:number, b:number, a:number }, backgroundColor:{r:number, g:number, b:number, a:number }}} opts 
  */
 
 function MakeTextSprite( message, parameters )
@@ -41,7 +41,12 @@ function MakeTextSprite( message, parameters )
 	
 	var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
 		parameters["backgroundColor"] : { r:0, g:0, b:0, a:0 };
-	// var spriteAlignment = THREE.SpriteAlignment.topLeft;
+    // var spriteAlignment = THREE.SpriteAlignment.topLeft;
+    
+	var textColor = parameters.hasOwnProperty("textColor") ?
+		parameters["textColor"] : { r:255, g:255, b:255, a:1 };
+
+    
 		
 	var canvas = document.createElement('canvas');
 	var context = canvas.getContext('2d');
@@ -74,13 +79,16 @@ function MakeTextSprite( message, parameters )
 
 	// canvas contents will be used for a texture
 	var texture = new THREE.Texture(canvas) 
-	texture.needsUpdate = true;
+    texture.needsUpdate = true;
+	var sizeAttenuation = parameters.hasOwnProperty("sizeAttenuation") ?
+		parameters["sizeAttenuation"] : true;
+
 	var spriteMaterial = new THREE.SpriteMaterial( 
-		{ map: texture } );
+		{ map: texture, sizeAttenuation} );
 	var sprite = new THREE.Sprite( spriteMaterial );
     // sprite.scale.set(  textWidth + borderThickness ,  fontsize * 1.4 + borderThickness , 0.1);
     // sprite.center = new THREE.Vector2( 0, 1)
-    console.log(  textWidth + borderThickness  ,  fontsize * 1.4 + borderThickness  )
+    // console.log(  textWidth + borderThickness  ,  fontsize * 1.4 + borderThickness  )
 	return sprite;	
 }
 export default MakeTextSprite

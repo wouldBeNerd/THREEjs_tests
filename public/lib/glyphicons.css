@@ -46,6 +46,15 @@
 	height: 32px !important;
 }
 
+
+.glyph-mountain_small {
+	background-image: url("./glyphicons/png/mountain_small.png");
+}
+
+.glyph-mountain_large {
+	background-image: url("./glyphicons/png/mountain_large.png");
+}
+
 .glyph-glass {
 	background-image: url("./glyphicons/png/glyphicons-1-glass.png");
 }
