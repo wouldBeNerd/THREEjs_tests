@@ -7,13 +7,44 @@ import parse_type from "../workers/parse_type"
 import MakeTextSprite from "../threeJS_extensions/build/MakeTextSprite"
 import red_dot from "../../assets/red_dot.png"
 
+const text_scale_factor = 10
 const text_scales = [
-    { width_scale : 2.20, height_scale :	1.1,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
-    { width_scale : 4.4, height_scale :	2.2,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
-    { width_scale : 8, height_scale :	4,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
-    { width_scale : 10, height_scale : 5,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 0.73, height_scale :	0.36,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 0.73, height_scale :	0.36,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 1.47, height_scale :	0.73,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 2.21, height_scale :	1.1,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 2.94, height_scale :	1.47,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 3.68, height_scale :	1.84,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 4.42, height_scale :	2.21,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 5.15, height_scale :	2.57,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 5.89, height_scale :	2.94,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 6.63, height_scale :	3.31,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 7.36, height_scale :	3.68,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 8.1, height_scale :	4.05,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 8.84, height_scale :	4.42,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 9.57, height_scale :	4.78,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 10.31, height_scale :	5.15,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 11.05, height_scale :	5.52,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 11.78, height_scale :	5.89,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 12.52, height_scale :	6.26,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 13.26, height_scale :	6.63,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     { width_scale : 14, height_scale :	7,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 14.73, height_scale :	7.36,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 15.47, height_scale :	7.73,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 16.21, height_scale :	8.1,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 16.94, height_scale :	8.47,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 17.68, height_scale :	8.84,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 18.42, height_scale :	9.21,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    { width_scale : 19.15, height_scale :	9.57,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    
+    
+    // { width_scale : 2.20, height_scale :	1.1,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    // { width_scale : 4.4, height_scale :	2.2,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    // { width_scale : 8, height_scale :	4,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    // { width_scale : 10, height_scale : 5,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
+    // { width_scale : 14, height_scale :	7,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
 ]
+const red_dot_scale_factor = 10
 const red_dot_scales = [
     {x : 0.03, y : 0.03 },
     {x : 0.06, y : 0.06 },
@@ -174,22 +205,32 @@ class ThreeDrawGrid extends Component{
             camera.lookAt( new THREE.Vector3( this.state.camera.look_x, this.state.camera.look_y, this.state.camera.look_z ) )
         }
 
-        let red_dot_i = Math.floor( this.state.camera.y / 10 )
+        let red_dot_i = Math.floor( this.state.camera.y / red_dot_scale_factor)
         if(red_dot_i !== this.state.red_dot.scale_i && this.state.red_dot.TObj !== null ){
             let new_state = {...this.state}
             new_state.red_dot.scale_i = red_dot_i
             this.setState(new_state, ()=>{
                 this.update_red_dot_scale()
             })
+        }else if(red_dot_i !== this.state.red_dot.scale_i){
+            let new_state = {...this.state}
+            new_state.red_dot.scale_i = red_dot_i
+            this.setState(new_state, ()=>{
+            })
         }
 
 
-        let new_scale_i = Math.floor( this.state.camera.y / 50 )
+        let new_scale_i = Math.floor( this.state.camera.y / text_scale_factor )
         if(new_scale_i !== this.state.ruler.text_scale_i && this.state.ruler.texts_x.children !== undefined && this.state.ruler.texts_z.children !== undefined){
             let new_state = {...this.state}
             new_state.ruler.text_scale_i = new_scale_i
             this.setState(new_state, ()=>{
                 this.update_ruler_text_scales()
+            })
+        }else if(new_scale_i !== this.state.ruler.text_scale_i ){
+            let new_state = {...this.state}
+            new_state.ruler.text_scale_i = new_scale_i
+            this.setState(new_state, ()=>{
             })
         }
 
