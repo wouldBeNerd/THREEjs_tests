@@ -4,95 +4,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import parse_type from "../workers/parse_type"
 
+import MakeTextSprite from "../threeJS_extensions/build/MakeTextSprite"
+import red_dot from "../../assets/red_dot.png"
 
 
 
-function roundRect(ctx, x, y, w, h, r) 
-{
-    ctx.beginPath();
-    ctx.moveTo(x+r, y);
-    ctx.lineTo(x+w-r, y);
-    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-    ctx.lineTo(x+w, y+h-r);
-    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-    ctx.lineTo(x+r, y+h);
-    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-    ctx.lineTo(x, y+r);
-    ctx.quadraticCurveTo(x, y, x+r, y);
-    ctx.closePath();
-    ctx.fill();
-	ctx.stroke();   
-}
 
-/**render sprite like numbers on screen
- * 
- * @param {string} message 
- * @param {{fontsize:number, fontface:string, border:boolean borderThickness:number, textColor:{r:number, g:number, b:number, a:number }, borderColor:{r:number, g:number, b:number, a:number }, backgroundColor:{r:number, g:number, b:number, a:number }}} opts 
- */
-
-function makeTextSprite( message, parameters )
-{
-	if ( parameters === undefined ) parameters = {};
-	
-	var fontface = parameters.hasOwnProperty("fontface") ? 
-		parameters["fontface"] : "Arial";
-	
-	var fontsize = parameters.hasOwnProperty("fontsize") ? 
-		parameters["fontsize"] : 50;
-	
-	var borderThickness = parameters.hasOwnProperty("borderThickness") ? 
-		parameters["borderThickness"] : 0;
-	
-	var borderColor = parameters.hasOwnProperty("borderColor") ?
-		parameters["borderColor"] : { r:0, g:255, b:0, a:0 };
-	
-	var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
-		parameters["backgroundColor"] : { r:0, g:0, b:0, a:0 };
-	// var spriteAlignment = THREE.SpriteAlignment.topLeft;
-		
-	var canvas = document.createElement('canvas');
-	var context = canvas.getContext('2d');
-	context.font = fontsize + "px " + fontface;
-    
-	// get size data (height depends only on font size)
-	var metrics = context.measureText( message );
-	var textWidth = metrics.width;
-	
-	// background color
-	context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
-								  + backgroundColor.b + "," + backgroundColor.a + ")";
-	// border color
-	context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
-								  + borderColor.b + "," + borderColor.a + ")";
-	context.lineWidth = borderThickness;
-	roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
-	// 1.4 is extra height factor for text below baseline: g,j,p,q.
-	
-	// text color
-	context.fillStyle = "rgba(255, 255, 255, 1.0)";
-	context.fillText( message, borderThickness, fontsize + borderThickness);
-    // context.width = textWidth + borderThickness
-    // context.height = fontsize * 1.4 + borderThickness
-    // canvas.width = (textWidth + borderThickness) * 1.1
-    // canvas.height = (fontsize * 1.4 + borderThickness) * 1.1
-    // context.top = 0
-    // context.left = 0
-
-	// canvas contents will be used for a texture
-	var texture = new THREE.Texture(canvas) 
-	texture.needsUpdate = true;
-	var spriteMaterial = new THREE.SpriteMaterial( 
-		{ map: texture } );
-	var sprite = new THREE.Sprite( spriteMaterial );
-    // sprite.scale.set(  textWidth + borderThickness ,  fontsize * 1.4 + borderThickness , 0.1);
-    sprite.center = new THREE.Vector2( 0, 1)
-    console.log(  textWidth + borderThickness  ,  fontsize * 1.4 + borderThickness  )
-	return sprite;	
-}
-
-const loc_parse = ( num ) => {
-    return Number.parseFloat(num).toFixed(2)
-}
 class ThreeDrawGrid extends Component{
     state = {
         canvasElement : document.querySelector(`#${this.props.id}`),
@@ -105,6 +22,18 @@ class ThreeDrawGrid extends Component{
         mouse : {
             x : 0,
             y : 0,
+            snap_increment : 1,/*value indicated the nearest increment to round to (1,2,5) */
+            snap_decimal : 1,/*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/
+            snap_point : false,
+        },
+        live_ruler : {
+            red:null,/** x axis */
+            blue : null,/** z axis */
+            green: null,/** point*/
+            red_distance: 0,
+            blue_distance: 0,
+            green_distance: 0,
+            last: new THREE.Vector3( 0,0,0)
         },
         plane : {
             plane : null,
@@ -125,6 +54,7 @@ class ThreeDrawGrid extends Component{
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000); 
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
+    red_dot = null/* sprite that points out mouse location as snapped to grid*/
     constructor(props){
         super(props)
         this.render3D = this.render3D.bind(this)
@@ -138,7 +68,9 @@ class ThreeDrawGrid extends Component{
         this.draw_grid = this.draw_grid.bind(this)
         this.draw_plane = this.draw_plane.bind(this)
         this.draw_plane_rulers = this.draw_plane_rulers.bind(this)
+        this.draw_red_dot = this.draw_red_dot.bind(this)
         this.on_mouse_move = this.on_mouse_move.bind(this)
+        this.loc_parse = this.loc_parse.bind(this)
     }
     _isMounted = false
     componentDidMount(){
@@ -163,6 +95,23 @@ class ThreeDrawGrid extends Component{
             let object = this.scene.getObjectByName(id)
             // console.log(object)
             if(object)this.scene.remove( object );
+        }
+    }
+    loc_parse( num ){/**parse location to snap_to value */
+        /**
+         * TODO: add snap to point toggle, if enabled find nearest point and snap to it
+         *   
+         */
+        let increment = this.state.mouse.snap_increment
+        let decimal = this.state.mouse.snap_decimal
+
+        let rounded_num = num * decimal
+        let increment_difference = rounded_num % increment
+
+        if(increment_difference < increment / 2){
+            return (rounded_num - increment_difference) / decimal
+        }else{
+            return (rounded_num + (increment - increment_difference)) / decimal
         }
     }
     on_mouse_move( event ) {
@@ -214,89 +163,125 @@ class ThreeDrawGrid extends Component{
 
             window.addEventListener( 'mousemove', this.on_mouse_move, false );
             // this.draw_grid()
+            // ! FUNCTIONS HERE MUST END WITH CALLBACK
             this.draw_plane( 
                 ()=> this.draw_plane_rulers(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
-                       ()=>{
-                           console.log("starting")
-                            this.start()
-                        }
+                    ()=> this.draw_red_dot(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
+                        ()=>{
+                            console.log("starting")
+                             this.start()
+                         }
+                    )
                 )
             )
            
         })//callback after setstate
         // this.render3D()
     }
-    draw_plane_rulers( cb ){
-
-
-        let textSprite = makeTextSprite( "199.64" )
+    text_sprite( message, {width_ratio=2, height=1.5, alignV2=new THREE.Vector2(0,1), textColor = {r:255, g:255, b:255, a:1}} ){
+        // TODO depending on the z location of camera the scale of the letters must be adjusted 
+        let sprite = MakeTextSprite( message, { textColor} )
         // textSprite.rotation.x = Math.PI / 2
-        textSprite.position.set(0, 1, 0)
-        let width_ratio = 2
-        let height = 1.5
-        textSprite.scale.set( width_ratio * height, height)        
-        this.scene.add(textSprite)
+        // sprite.position.set(0, 1, 0)
+        sprite.center = alignV2
+        sprite.scale.set( width_ratio * height, height)   
+        return sprite
+        // this.scene.add(sprite)
+    }
+    draw_plane_rulers( cb ){
+        let w_m = this.state.plane.width / 2
+        let h_m = this.state.plane.height / 2
+        let w_dm = this.state.plane.width * 10 / 2
+        let h_dm = this.state.plane.height * 10 / 2
+        let w_cm = this.state.plane.width * 100 / 2
+        let h_cm = this.state.plane.height * 100 / 2
+        let start_p = 0
+        // ! we are iterating half only, so we must add negative as well as positive points at the same time
+        let m_geo = new THREE.Geometry();
+        let m_mat = new THREE.LineBasicMaterial({color:0xffffff, opacity : 0.6, transparent:false, linewidth : 10})
+        let text_group = new THREE.Group()
+        //width lines and width texts
+        for(let i = 0; i < w_m; i++){
+            let modulo = i % 10
+            let length = 0.1;
+            if( modulo === 0 ){//0, 10, 20...
+                length = 0.25
+                if(i !== 0){
+                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0.1, 1)})
+                    let neg_text = text.clone()
+                    text.position.set( i , 0.001, length )
+                    neg_text.position.set( -i , 0.001, length )
+                    text_group.add(text)                
+                    text_group.add(neg_text)                
+                }
+            }else if( modulo === 5){//5, 15, 25, ...
+                length = 0.15
+                if(i !== 0){
+                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0.1, 1)})
+                    let neg_text = text.clone()
+                    text.position.set( i , 0.001, length )
+                    neg_text.position.set( -i , 0.001, length )
+                    text_group.add(text)                
+                    text_group.add(neg_text)                
+                }
+            }
+            m_geo.vertices.push( new THREE.Vector3( i , 0.001, length));
+            m_geo.vertices.push( new THREE.Vector3( i , 0.001, -length));
 
+            m_geo.vertices.push( new THREE.Vector3( -i , 0.001, -length));
+            m_geo.vertices.push( new THREE.Vector3( -i , 0.001, length));
+        }
+        //height lines and height texts
+        for(let i = 0; i < h_m; i++){
+            let modulo = i % 10
+            let length = 0.1;            
+            if( modulo === 0 ){//0, 10, 20...
+                length = 0.25
+                if(i !== 0){
+                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0, 0.8)})
+                    let neg_text = text.clone()
+                    text.position.set( length , 0.001, i )
+                    neg_text.position.set( length , 0.001, -i )
+                    text_group.add(text)                
+                    text_group.add(neg_text)                
+                }
+            }else if( modulo === 5){//5, 15, 25, ...
+                length = 0.15
+                if(i !== 0){
+                    let text = this.text_sprite( `${i}`, {alignV2:new THREE.Vector2(0, 0.8)})
+                    let neg_text = text.clone()
+                    text.position.set( length , 0.001, i )
+                    neg_text.position.set( length , 0.001, -i )
+                    text_group.add(text)                
+                    text_group.add(neg_text)                
+                }
+            }
+            m_geo.vertices.push( new THREE.Vector3( length , 0.001, i));
+            m_geo.vertices.push( new THREE.Vector3( -length , 0.001, i));
 
-
-        if(this.font === undefined || this.font === null){
-            let loader = new THREE.FontLoader();
-            loader.load("lib/three_font/helvetiker_regular.typeface.json", (font)=>{
-                this.font = font
-
-                var textMaterial = new THREE.MeshBasicMaterial( 
-                    { color: 0x00ff00 }
-                  );    
-                let textgeometry = new THREE.TextGeometry("123.456", {
-                    font: font,
-                    size: 0.4,
-                    height: 0.004,
-                    curveSegments: 5,
-                    bevelEnabled: true,
-                    bevelThickness: 0.004,
-                    bevelSize: 0.001,
-                    bevelOffset: 0,
-                    bevelSegments: 5
-                })
-                let mesh = new THREE.Mesh( textgeometry, textMaterial)
-                // mesh.scale()
-                mesh.rotation.x = (Math.PI / 2)*3
-                mesh.position.set(-10, 0.5, -10)
-                // this.mesh.needsUpdate = true
-                this.scene.add(mesh)
-                // this.scene.needsUpdate = true
-                cb()
-
-            })
-
-        }else{
-
-            // var textMaterial = new THREE.MeshPhongMaterial( 
-            //     { color: 0xff0000, specular: 0xffffff }
-            //   );    
-            // let textgeometry = new THREE.TextGeometry("123.456", {
-            //     font: this.font,
-            //     size: 80,
-            //     height: 5,
-            //     curveSegments: 12,
-            //     bevelEnabled: true,
-            //     bevelThickness: 10,
-            //     bevelSize: 8,
-            //     bevelOffset: 0,
-            //     bevelSegments: 5
-            // })
-            // let mesh = new THREE.Mesh( textgeometry, textMaterial)
-
-            // mesh.rotation.x = Math.PI / 2
-            // mesh.position.set(0, 3, 0)
-            // this.scene.add(mesh)
-    
-    
-            // cb()
+            m_geo.vertices.push( new THREE.Vector3( -length , 0.001, -i));
+            m_geo.vertices.push( new THREE.Vector3( length , 0.001, -i));
         }
 
 
+        let m_ruler = new THREE.LineSegments( m_geo, m_mat ) 
+        this.scene.add(m_ruler);
+        this.scene.add(text_group)
 
+        cb()
+    }
+    draw_red_dot( cb ){
+
+        var spriteMap = new THREE.TextureLoader().load( red_dot );
+        var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+        var sprite = new THREE.Sprite( spriteMaterial );
+        sprite.scale.set( 0.2, 0.2, 1 );
+        sprite.center = new THREE.Vector2( 0.5, 0.5)
+        sprite.position.set( 0,0.1,0)
+        this.red_dot = sprite;
+        this.scene.add( sprite );
+
+        cb()
     }
     draw_plane( cb ){
         let geometry = new THREE.PlaneGeometry(this.state.plane.width, this.state.plane.height, 4)
@@ -395,39 +380,20 @@ class ThreeDrawGrid extends Component{
         // console.log(this.scene.children)
 
         // this.state.plane.plane.raycast( this.raycaster, )
-
+        if( this.red_dot ){
+            this.red_dot.position.set( this.state.mouse.x, 0.1, this.state.mouse.y  )
+        }
         if( this.state.plane.plane !== null ){
             intersects = this.raycaster.intersectObjects( [this.state.plane.plane] );
             if(intersects.length > 0){
                 let new_state = this.state
-                // console.log( this.raycaster.point )
-                new_state.mouse = {
-                    x : loc_parse( intersects[intersects.length -1].point.x ),
-                    y : loc_parse( intersects[intersects.length -1].point.z )
-                }
+                // console.log(  this.loc_parse( intersects[intersects.length -1].point.x ))
+                new_state.mouse.x = this.loc_parse( intersects[intersects.length -1].point.x )
+                new_state.mouse.y = this.loc_parse( intersects[intersects.length -1].point.z )
                 this.setState(new_state)
             }
 
         }
-        //FOR DRAW_GRID POINT INTERSECTION DETECTION DEPRECATED
-        // if( this.scene.children !== undefined ){
-        //     intersects = this.raycaster.intersectObjects( this.state.grid.interactive_points );
-        //     // if(intersects.length > 0) console.log(intersects)
-
-     
-        //     for ( var i = 0; i < this.previously_intersected.length; i++ ) {
-        //         this.previously_intersected[ i ].object.material.color.set( 0xffffff );
-        //         this.previously_intersected[ i ].object.material.transparent = true
-        //     }
-        //     this.previously_intersected = []
-        //     for ( var i = 0; i < intersects.length; i++ ) {
-        //         console.log(intersects[ i ].object.material.point)
-        //         intersects[ i ].object.material.color.set( 0x0000ff );
-        //         intersects[ i ].object.material.transparent = false
-        //         this.previously_intersected.push( intersects[ i ] )
-        //     }
-        // }
-
 
     //   this.resizeCanvasToDisplaySize();
     //    if( this.controls !== undefined ) this.controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
@@ -478,7 +444,44 @@ class ThreeDrawGrid extends Component{
                     type="number" value={this.state.grid.size} onChange={this.set_prop("grid", "size", "number", this.draw_grid)}
                 /> */}
             </div>
-
+            <div className="row col col-sm-3 ">
+                <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center">
+                    <span>
+                        Snap To
+                    </span>
+                </div>
+            </div>
+            <div className="row col col-sm-3 ">
+                <select className="col bg-dark text-white"
+                value = {this.state.mouse.snap_increment}
+                onChange={this.set_prop("mouse", "snap_increment", "number", ()=>{} )}
+                >
+                    {/*value indicated the nearest increment to round to */}
+                    <option value = {1}>1</option>
+                    <option value = {2}>2</option>
+                    <option value = {5}>5</option>
+                </select>                        
+                <select className="col col-sm-8 bg-dark text-white"
+                value = {this.state.mouse.snap_decimal}
+                onChange={this.set_prop("mouse", "snap_decimal", "number", ()=>{} )}
+                >
+                    {/*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/}
+                    <option value = {1}>meter</option>
+                    <option value = {10}>decimeter</option>
+                    <option value = {100}>centimeter</option>
+                </select>                   
+            </div>
+           
+            <div className="row col col-sm-3 input-group">   
+                <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center p-0">
+                    <input type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="primary" data-offstyle="secondary" 
+                    className = "m-0" data-on="Point Snap ON" data-off="Point Snap OFF" 
+                    data-width="100%" data-height="100%"
+                    defaultChecked={this.state.mouse.snap_point} 
+                    onChange={this.set_prop("mouse", "snap_point", "boolean", ()=>{} )}
+                    />
+                </div>                       
+            </div>            
         </div>
 
 
