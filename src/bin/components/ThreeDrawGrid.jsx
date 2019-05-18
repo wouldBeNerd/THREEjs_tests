@@ -7,6 +7,16 @@ import parse_type from "../workers/parse_type"
 import MakeTextSprite from "../threeJS_extensions/build/MakeTextSprite"
 import red_dot from "../../assets/red_dot.png"
 
+const round_to_x_curry = ( round_to)=>{
+    let pow = Math.pow( 10, round_to )
+    console.log(pow)
+    return (num)=>{
+        return ( Math.round( num * pow ) / pow )
+    }
+}
+const round_2_dec = round_to_x_curry(2)
+const round_3_dec = round_to_x_curry(3)
+/** REFACTORS SPRITE SIZE DEPENDING ON THE DEPTH OF Y CAMERA */
 const text_scale_factor = 10
 const text_scales = [
     { width_scale : 0.73, height_scale :	0.36,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
@@ -36,14 +46,13 @@ const text_scales = [
     { width_scale : 17.68, height_scale :	8.84,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     { width_scale : 18.42, height_scale :	9.21,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     { width_scale : 19.15, height_scale :	9.57,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
-    
-    
     // { width_scale : 2.20, height_scale :	1.1,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     // { width_scale : 4.4, height_scale :	2.2,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     // { width_scale : 8, height_scale :	4,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     // { width_scale : 10, height_scale : 5,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     // { width_scale : 14, height_scale :	7,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
 ]
+/** REFACTORS SPRITE SIZE DEPENDING ON THE DEPTH OF Y CAMERA */
 const red_dot_scale_factor = 10
 const red_dot_scales = [
     {x : 0.03, y : 0.03 },
@@ -76,12 +85,9 @@ const red_dot_scales = [
 class ThreeDrawGrid extends Component{
     state = {
         canvasElement : document.querySelector(`#${this.props.id}`),
-        // grid : {
-        //     size : 10,
-        //     step : 1,
-        //     grid : null,
-        //     interactive_points : []
-        // },
+        drawing : {
+
+        },
         mouse : {
             x : 0,
             y : 0,
@@ -105,7 +111,8 @@ class ThreeDrawGrid extends Component{
             red_distance: 0,
             blue_distance: 0,
             green_distance: 0,
-            last: new THREE.Vector3( 0,0,0)
+            lastV3: new THREE.Vector3( 0,0,0),
+            history : [/**{ shape_type, V3s} */]
         },
         plane : {
             plane : null,
@@ -119,6 +126,14 @@ class ThreeDrawGrid extends Component{
             look_x: 0,
             look_y: 0,
             look_z: 0,
+        },
+        moveing: {
+            speed : 0,
+            accelerate : 0.01,
+            speed_max : 1
+        },
+        active_mode : "navigate",
+        active_keys : {
         }
     };
     scene =  new THREE.Scene(); 
@@ -133,8 +148,8 @@ class ThreeDrawGrid extends Component{
         this.start = this.start.bind(this)
         this.stop = this.stop.bind(this)
         this.animate = this.animate.bind(this)
-        this.update_camera = this.update_camera.bind(this)
         this.set_prop = this.set_prop.bind(this)
+        this.set_prop_from_input_event = this.set_prop_from_input_event.bind(this)
         this.new_or_state = this.new_or_state.bind(this)
         this.remove_from_scene = this.remove_from_scene.bind(this)
         this.draw_plane = this.draw_plane.bind(this)
@@ -145,6 +160,31 @@ class ThreeDrawGrid extends Component{
         this.draw_2_point_ruler = this.draw_2_point_ruler.bind(this)
         this.update_ruler_text_scales = this.update_ruler_text_scales.bind(this)
         this.update_red_dot_scale = this.update_red_dot_scale.bind(this)
+        this.prevent_bubbles = this.prevent_bubbles.bind(this)
+
+        //KEYBOARD
+        this.activate_keyboard_button = this.activate_keyboard_button.bind(this)
+        this.deactivate_keyboard_button = this.deactivate_keyboard_button.bind(this)
+        this.reset_key_variables = this.reset_key_variables.bind(this)
+        
+        this.move_general = this.move_general.bind(this)
+        
+
+        //CAMERA
+        this.update_camera = this.update_camera.bind(this)
+        this.move_camera.in = this.move_camera.in.bind(this)
+        this.move_camera.out = this.move_camera.out.bind(this)
+        this.move_camera.up = this.move_camera.up.bind(this)
+        this.move_camera.down = this.move_camera.down.bind(this)
+        this.move_camera.left = this.move_camera.left.bind(this)
+        this.move_camera.right = this.move_camera.right.bind(this)
+
+        //MODES
+        // this.modes.draw_polygon = this.modes.draw_polygon.bind(this)
+        
+        this.custom_event_listeners_add = this.custom_event_listeners_add.bind(this)
+        this.custom_event_listeners_remove = this.custom_event_listeners_remove.bind(this)
+        
     }
     _isMounted = false
     componentDidMount(){
@@ -196,6 +236,26 @@ class ThreeDrawGrid extends Component{
         this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     
     }
+    move_general(pos_state_category, pos_state_keys, backwards=false, cb=()=>{} ){
+        let {speed, accelerate, speed_max} = this.state.moveing
+        let new_state = {...this.state}
+        if(speed < speed_max) speed += accelerate;
+        new_state.moveing.speed = speed
+        pos_state_keys.forEach( pos_state_key => { 
+            if(backwards === true) new_state[ pos_state_category ][ pos_state_key ] -= speed;
+            else new_state[ pos_state_category ][ pos_state_key ] += speed;
+        })
+
+        this.setState(new_state, cb)
+    }
+    move_camera = {
+        in:     ()=>{ this.move_general( "camera", ["y"], true, this.update_camera ) },
+        out:    ()=>{ this.move_general( "camera", ["y"], false, this.update_camera ) },
+        up:     ()=>{ this.move_general( "camera", ["z", "look_z"], true, this.update_camera ) },
+        down:   ()=>{ this.move_general( "camera", ["z", "look_z"], false, this.update_camera ) },
+        left:   ()=>{ this.move_general( "camera", ["x", "look_x"], true, this.update_camera ) },
+        right:  ()=>{ this.move_general( "camera", ["x", "look_x"], false, this.update_camera ) },
+    }
     update_camera( camera ){
         if(camera === undefined || camera === null){
             this.camera.position.set( this.state.camera.x, this.state.camera.y,  this.state.camera.z);
@@ -204,9 +264,12 @@ class ThreeDrawGrid extends Component{
             camera.position.set( this.state.camera.x, this.state.camera.y,  this.state.camera.z);
             camera.lookAt( new THREE.Vector3( this.state.camera.look_x, this.state.camera.look_y, this.state.camera.look_z ) )
         }
-
+        //! if scale out of array range use last
         let red_dot_i = Math.floor( this.state.camera.y / red_dot_scale_factor)
-        if(red_dot_i !== this.state.red_dot.scale_i && this.state.red_dot.TObj !== null ){
+        if(red_dot_i !== this.state.red_dot.scale_i && 
+            this.state.red_dot.TObj !== null &&
+            red_dot_scales[ red_dot_i ] !== undefined
+        ){
             let new_state = {...this.state}
             new_state.red_dot.scale_i = red_dot_i
             this.setState(new_state, ()=>{
@@ -221,7 +284,11 @@ class ThreeDrawGrid extends Component{
 
 
         let new_scale_i = Math.floor( this.state.camera.y / text_scale_factor )
-        if(new_scale_i !== this.state.ruler.text_scale_i && this.state.ruler.texts_x.children !== undefined && this.state.ruler.texts_z.children !== undefined){
+        if(new_scale_i !== this.state.ruler.text_scale_i && 
+            text_scales[ new_scale_i ] !== undefined &&
+            this.state.ruler.texts_x.children !== undefined && 
+            this.state.ruler.texts_z.children !== undefined 
+        ){
             let new_state = {...this.state}
             new_state.ruler.text_scale_i = new_scale_i
             this.setState(new_state, ()=>{
@@ -257,52 +324,7 @@ class ThreeDrawGrid extends Component{
         let new_scale = red_dot_scales[ this.state.red_dot.scale_i ]
         this.state.red_dot.TObj.scale.set( new_scale.x, new_scale.y, 0.2 )
     }
-    init3D(){
 
-
-
-        let scene = this.scene;
-        let renderer = this.renderer;
-        let camera = this.camera;
-        this.update_camera( camera )
-        renderer.setSize( window.innerWidth, window.innerHeight)
-        this.mount.appendChild( renderer.domElement )
-        
-        // positioning a light above the camera
-        var light = new THREE.PointLight( 0xffffff, 4, 1000, 1 );
-        light.position.set( this.state.camera.x, this.state.camera.y,  this.state.camera.z);
-        camera.add(light);
-
-
-
-
-        // let grid = this.draw_grid()
-
-        // this.mount =this.state.canvasElement
-        // console.log(this.mount)
-
-        this.setState( {
-            ...this.state,
-            grid:{ ...this.state.grid }
-        },()=>{
-
-            window.addEventListener( 'mousemove', this.on_mouse_move, false );
-            // this.draw_grid()
-            // ! FUNCTIONS HERE MUST END WITH CALLBACK
-            this.draw_plane( 
-                ()=> this.draw_plane_rulers(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
-                    ()=> this.draw_red_dot(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
-                        ()=>{
-                            console.log("starting")
-                             this.start()
-                         }
-                    )
-                )
-            )
-           
-        })//callback after setstate
-        // this.render3D()
-    }
     text_sprite( message, { width_scale=2, height_scale=1.5, alignV2=new THREE.Vector2(0,1), textColor = {r:255, g:255, b:255, a:1}, sizeAttenuation=true} ){
         // TODO depending on the z location of camera the scale of the letters must be adjusted 
         let sprite = MakeTextSprite( message, { textColor, sizeAttenuation } )
@@ -316,7 +338,7 @@ class ThreeDrawGrid extends Component{
     draw_2_point_ruler( cb ){
         
     }
-    draw_plane_rulers( cb ){
+    draw_plane_rulers( cb ){//RUNS AT INIT THEREFORE IN A CALLBACK CHAIN
 
         /**get text scale */
         let scale_i = this.state.ruler.text_scale_i
@@ -408,8 +430,7 @@ class ThreeDrawGrid extends Component{
 
         this.setState(new_state, cb)// ! /*KEEP LAST AS IT CONTAINS CALLBACK */
     }
-    draw_red_dot( cb ){
-
+    draw_red_dot( cb ){//RUNS AT INIT THEREFORE IN A CALLBACK CHAIN
         var spriteMap = new THREE.TextureLoader().load( red_dot );
         var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
         var sprite = new THREE.Sprite( spriteMaterial );
@@ -424,7 +445,7 @@ class ThreeDrawGrid extends Component{
 
         cb()
     }
-    draw_plane( cb ){
+    draw_plane( cb ){//RUNS AT INIT THEREFORE IN A CALLBACK CHAIN
         let geometry = new THREE.PlaneGeometry(this.state.plane.width, this.state.plane.height, 4)
         let material = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0, side : THREE.DoubleSide})
         let mesh = new THREE.Mesh( geometry, material)
@@ -444,8 +465,147 @@ class ThreeDrawGrid extends Component{
         })
     }
 
-    start = () => {
+    modes = {//!modes must ALWAYS CONTAIN active_keys, EVEN IF EMPTY (CRASH ANIMATE LOOP)
+        navigate:{
+            active_keys : {
+                "PageDown" : this.move_camera.in,
+                "PageUp" : this.move_camera.out,
+                "ArrowUp" : this.move_camera.up,
+                "ArrowDown" : this.move_camera.down,
+                "ArrowLeft" : this.move_camera.left,
+                "ArrowRight" : this.move_camera.right,
+            }
+        },
+        draw_polygon:{
+            active_keys : {
+                // "PageDown" : this.move_camera.in,
+                // "PageUp" : this.move_camera.out,
+                // "ArrowUp" : this.move_camera.up,
+                // "ArrowDown" : this.move_camera.down,
+                // "ArrowLeft" : this.move_camera.left,
+                // "ArrowRight" : this.move_camera.right,
+            }
+        },
+
+    }
+    reset_key_variables(event){
+        if(Object.keys(this.state.active_keys).length === 0){
+            if(this.state.moveing.speed > 0) this.set_prop("moveing", "speed", ()=>{return 0} )
+        }
+    }
+    activate_keyboard_button(event){
+            if (event.repeat === true){ return; }
+            if (event.defaultPrevented) {
+              return; // Do nothing if the event was already processed
+            }
+            //for keys that need to be held down to move faster
+            //! DO NOT USE FOR ONE TIME PRESS KEYS
+            const activate_key = (key)=>{
+                let new_state = {...this.state};
+                new_state.active_keys[ key ] = true;
+                this.setState(new_state, console.log(Object.keys( this.state.active_keys)))
+            }
+            let registered_keys = {
+                "1" : ()=>{console.log(event.key)},
+                "2" : ()=>{console.log(event.key)},
+                "3" : ()=>{console.log(event.key)},
+                "Enter" : ()=>{console.log(event.key)},
+            }
+            if( registered_keys[ event.key ] ){
+                registered_keys[ event.key ]()
+            }else{
+                //! the following keys are not one time press keys
+                //! they must be held in, must be deactivated
+                activate_key(event.key)
+                // "ArrowDown" : ()=>{},
+                // "ArrowUp" : ()=>{},
+                // "ArrowLeft" : ()=>{},
+                // "ArrowRight" : ()=>{},
+                // "PageUp" : ()=>{console.log(event.key)},
+                // "PageDown" : ()=>{console.log(event.key)},
+            }
+            // Cancel the default action to avoid it being handled twice
+            event.preventDefault();
+    }
+    deactivate_keyboard_button(event){
+        if (event.defaultPrevented) {
+          return; // Do nothing if the event was already processed
+        }
+        //for keys that need to be held down to move faster
+        //! DO NOT USE FOR ONE TIME PRESS KEYS
+        const deactivate_key = (key)=>{
+            let new_state = {...this.state};
+            if( new_state.active_keys[ key ] ){
+                delete new_state.active_keys[ key ]
+                this.setState(new_state, console.log(Object.keys( this.state.active_keys)))
+            }
+        }
+        //! the following keys are not one time press keys
+        //! they must be held in, must be deactivated
+        deactivate_key(event.key)
+        // Cancel the default action to avoid it being handled twice
+        event.preventDefault();
+        this.reset_key_variables(event)//! clean up any variables that were being used by active keys prior to release
+    }    
+    custom_event_listeners_add(){
+        this.mount.addEventListener( 'mousemove', this.on_mouse_move, false );
+        window.addEventListener("keydown", this.activate_keyboard_button, true );
+        window.addEventListener("keyup", this.deactivate_keyboard_button, true );
         
+        // window.addEventListener( 'mousemove', this.on_mouse_move, false );
+    }
+    custom_event_listeners_remove(){
+        this.mount.removeEventListener( 'mousemove', this.on_mouse_move, false );
+        window.removeEventListener("keydown", this.activate_keyboard_button, true );
+        window.removeEventListener("keyup", this.deactivate_keyboard_button, true );
+    }    
+    init3D(){
+
+
+
+        let scene = this.scene;
+        let renderer = this.renderer;
+        let camera = this.camera;
+        this.update_camera( camera )
+        renderer.setSize( window.innerWidth, window.innerHeight)
+        this.mount.appendChild( renderer.domElement )
+        
+        // positioning a light above the camera
+        var light = new THREE.PointLight( 0xffffff, 4, 1000, 1 );
+        light.position.set( this.state.camera.x, this.state.camera.y,  this.state.camera.z);
+        camera.add(light);
+
+
+
+
+        // let grid = this.draw_grid()
+
+        // this.mount =this.state.canvasElement
+        // console.log(this.mount)
+
+        this.setState( {
+            ...this.state,
+            grid:{ ...this.state.grid }
+        },()=>{
+
+            this.custom_event_listeners_add()
+            
+            // ! FUNCTIONS HERE MUST END WITH CALLBACK
+            this.draw_plane( 
+                ()=> this.draw_plane_rulers(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
+                    ()=> this.draw_red_dot(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
+                        ()=>{
+                            console.log("starting")
+                             this.start()
+                         }
+                    )
+                )
+            )
+           
+        })//callback after setstate
+        // this.render3D()
+    }    
+    start = () => {
         if (!this.frameId && this._isMounted) {
           this.frameId = requestAnimationFrame(this.animate)
         }
@@ -455,17 +615,18 @@ class ThreeDrawGrid extends Component{
     }
     previously_intersected = []
     animate = () => {
+        //!check activate_keys against active_keys in modes , trigger one iteration if mode and active key is valid
+        if( this.modes[ this.state.active_mode ]["active_keys"] ){
+            Object.keys( this.state.active_keys ).forEach( active_key => {
+                if(this.modes[ this.state.active_mode ]["active_keys"][ active_key ]) this.modes[ this.state.active_mode ]["active_keys"][ active_key ]()
+            })
+        }
+
 
         this.raycaster.setFromCamera( this.mouse, this.camera );
-
         let intersects
-        // console.log(this.scene.children)
 
-        // this.state.plane.plane.raycast( this.raycaster, )
-        if( this.red_dot ){
-            this.red_dot.position.set( this.state.mouse.x, 0.1, this.state.mouse.y  )
-        }
-        if( this.state.plane.plane !== null ){
+        if( this.state.plane.plane !== null ){//CALCULATES WHERE THE MOUSE IS ON THE DRAWING PLANE WHICH IS ON Y 0
             intersects = this.raycaster.intersectObjects( [this.state.plane.plane] );
             if(intersects.length > 0){
                 let new_state = this.state
@@ -477,116 +638,138 @@ class ThreeDrawGrid extends Component{
 
         }
 
-    //   this.resizeCanvasToDisplaySize();
-    //    if( this.controls !== undefined ) this.controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-       this.render3D()
+        if( this.red_dot ){//PAINTS RED DOT IN NEW POSITION
+            this.red_dot.position.set( this.state.mouse.x, 0.1, this.state.mouse.y  )
+        }
+
+
+       this.render3D()//this.renderer.render
        this.frameId = window.requestAnimationFrame(this.animate)
     }
-    // renderScene = () => {
-    //   this.renderer.render(this.scene, this.camera)
-    // }    
     render3D(){
         this.renderer.render(this.scene, this.camera);
     }
-    set_prop( category, property, type, this_fn){
+    set_prop(category, property, set_fn, cb_fn = ()=>{} ){
+        let new_state = this.state
+        new_state[category][property] = set_fn()
+        this.setState( new_state, cb_fn)
+    }
+    set_prop_from_input_event( category, property, type, this_fn ){
         // console.log(category, property)
         return (e)=>{
-            let new_state =  this.state
+            let new_state =  {...this.state}
             new_state[category][property] =parse_type(type, e.target.value)
             this.setState({...new_state,}, this_fn )
         }
     }
     componentWillUnmount(){
-    this._isMounted = false
-    this.stop()
-    this.mount.removeChild(this.renderer.domElement)
+        this._isMounted = false
+        this.stop()
+        this.custom_event_listeners_remove()
+        this.mount.removeChild(this.renderer.domElement)
+    }
+    prevent_bubbles(e, cb){
+        e.stopPropagation(); e.preventDefault();
+        if (cb !== undefined) cb(e);
     }
     render(){
     return(
         <div  >
-        {(this.props.id === null)?null:
-        <div id={`${this.props.id}`} style={{ width: `100%`, height: `${window.innerHeight /** 0.85*/}px` }}
-            ref={(mount) => { this.mount = mount }}
-        />}
-        {/* BUTTONS */}
-        <div style={{
-            position: "absolute",
-            top: "32px", 
-            left: "0px", 
-            opacity: 0.9, 
-            zIndex: 10000
-        }} className="container">
-            <div className="row col col-sm-3 ">
-                <div className="col col-sm text-white" >{`Camera X:${this.state.camera.x} Y:${this.state.camera.y} Z:${this.state.camera.z}`}</div>
-            </div>
-            <div className="row col col-sm-3 ">
-                <div className="col col-sm text-white" >{`Mouse X:${this.state.mouse.x} Y:${this.state.mouse.y}`}</div>
-            </div>
-            <div className="row col col-sm-3 ">
-                <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center">
-                    <span>
-                        Snap To
-                    </span>
-                </div>
-            </div>
-            <div className="row col col-sm-3 ">
-                <select className="col bg-dark text-white"
-                value = {this.state.mouse.snap_increment}
-                onChange={this.set_prop("mouse", "snap_increment", "number", ()=>{} )}
-                >
-                    {/*value indicated the nearest increment to round to */}
-                    <option value = {1}>1</option>
-                    <option value = {2}>2</option>
-                    <option value = {5}>5</option>
-                </select>                        
-                <select className="col col-sm-8 bg-dark text-white"
-                value = {this.state.mouse.snap_decimal}
-                onChange={this.set_prop("mouse", "snap_decimal", "number", ()=>{} )}
-                >
-                    {/*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/}
-                    <option value = {1}>meter</option>
-                    <option value = {10}>decimeter</option>
-                    <option value = {100}>centimeter</option>
-                </select>                   
-            </div>
-           
-            <div className="row col col-sm-3 input-group">   
-                <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center p-0">
-                    <input type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="primary" data-offstyle="secondary" 
-                    className = "m-0" data-on="Point Snap ON" data-off="Point Snap OFF" 
-                    data-width="100%" data-height="100%"
-                    defaultChecked={this.state.mouse.snap_point} 
-                    onChange={this.set_prop("mouse", "snap_point", "boolean", ()=>{} )}
-                    />
-                </div>                       
-            </div>            
-            <div className="row col col-sm-3 input-group ">   
-                <div className="col text-white text-left border-light bg-dark border d-flex align-items-start justify-content-center p-0">
-                    <div className="col p-0 m-0" >
-                        <button className="btn btn-dark btn-sm border-none pt-0" type="button" data-reactroot=""
-                            // onClick={ this.set_prop("camera", "y", "number", ()=>{}, ()=>{ return this.state.camera.y - 5} )}
-                        >
-                            <span className="glyph glyph-mountain_small glyph-small glyph-white align-middle">
-                            </span>
-                        </button>
-                    </div>
-                    <div className="col col-8 pl-0 pr-0" >
-                        <input type="range" className="form-control p-1" min={5} max={200} 
-                         value = { this.state.camera.y }
-                         onChange={ this.set_prop("camera", "y", "number", this.update_camera )}
-                        
-                        />
-                    </div>
-                    <div className="col p-0 m-0" >
-                        <button className="btn btn-dark btn-sm border-none pt-0" type="button" data-reactroot="">
-                            <span className="glyph glyph-mountain_large glyph-small glyph-white align-middle">
-                            </span>
-                        </button>
-                    </div>                 
-                </div>
-            </div>
-        </div>
 
+
+        {(this.props.id === null)?null:
+            <div id={`${this.props.id}`} style={{ width: `100%`, height: `${window.innerHeight /** 0.85*/}px` }}
+                ref={(mount) => { this.mount = mount }}//3D CANVAS GETS MOUNTED HERE
+            />}
+
+
+        {/* BUTTONS CONTAINER */}
+        <form className="px-2 py-1" style={{minWidth:400}}
+            onSubmit={(e)=>{ this.prevent_bubbles(e, ()=>{})}}
+            onMouseOver={(e)=>{ this.prevent_bubbles(e, ()=>{})}}
+            /**DISABLE onMouseMove event because it prevents user of range slider */
+            // onMouseMove={(e)=>{ this.prevent_bubbles(e, ()=>{})}}
+        >
+            {/* BUTTONS VISUAL CONTAINER */}
+            <div style={{
+                position: "absolute",
+                top: "32px", 
+                left: "0px", 
+                opacity: 0.9, 
+                zIndex: 10000
+            }} className="container">
+                <div className="row col col-sm-3 ">
+                    <div className="col col-sm text-white" >{`Camera X:${ round_2_dec( this.state.camera.x ) } Y:${  round_2_dec(this.state.camera.y)  } Z:${  round_2_dec(this.state.camera.z) }`}</div>
+                </div>
+                <div className="row col col-sm-3 ">
+                    <div className="col col-sm text-white" >{`Mouse X:${this.state.mouse.x} Y:${this.state.mouse.y}`}</div>
+                </div>
+                <div className="row col col-sm-3 ">
+                    <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center">
+                        <span>
+                            Snap To
+                        </span>
+                    </div>
+                </div>
+                <div className="row col col-sm-3 ">
+                    <select className="col bg-dark text-white"
+                    value = {this.state.mouse.snap_increment}
+                    onChange={this.set_prop_from_input_event("mouse", "snap_increment", "number", ()=>{} )}
+                    >
+                        {/*value indicated the nearest increment to round to */}
+                        <option value = {1}>1</option>
+                        <option value = {2}>2</option>
+                        <option value = {5}>5</option>
+                    </select>                        
+                    <select className="col col-sm-8 bg-dark text-white"
+                    value = {this.state.mouse.snap_decimal}
+                    onChange={this.set_prop_from_input_event("mouse", "snap_decimal", "number", ()=>{} )}
+                    >
+                        {/*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/}
+                        <option value = {1}>meter</option>
+                        <option value = {10}>decimeter</option>
+                        <option value = {100}>centimeter</option>
+                    </select>                   
+                </div>
+            
+                <div className="row col col-sm-3 input-group">   
+                    <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center p-0">
+                        <input type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="primary" data-offstyle="secondary" 
+                        className = "m-0" data-on="Point Snap ON" data-off="Point Snap OFF" 
+                        data-width="100%" data-height="100%"
+                        defaultChecked={this.state.mouse.snap_point} 
+                        onChange={this.set_prop_from_input_event("mouse", "snap_point", "boolean", ()=>{} )}
+                        />
+                    </div>                       
+                </div>            
+                <div className="row col col-sm-3 input-group ">   
+                    <div className="col text-white text-left border-light bg-dark border d-flex align-items-start justify-content-center p-0">
+                        <div className="col p-0 m-0" >
+                            <button className="btn btn-dark btn-sm border-none pt-0" type="button" data-reactroot=""
+                                // onClick={ this.set_prop("camera", "y", "number", ()=>{}, ()=>{ return this.state.camera.y - 5} )}
+                            >
+                                <span className="glyph glyph-mountain_small glyph-small glyph-white align-middle">
+                                </span>
+                            </button>
+                        </div>
+                        <div className="col col-8 pl-0 pr-0" >
+                            <input type="range" className="form-control p-1" min={5} max={200} 
+                            value = { this.state.camera.y }
+                            onChange={ this.set_prop_from_input_event("camera", "y", "number", this.update_camera )}
+                            
+                            />
+                        </div>
+                        <div className="col p-0 m-0" >
+                            <button className="btn btn-dark btn-sm border-none pt-0" type="button" data-reactroot="">
+                                <span className="glyph glyph-mountain_large glyph-small glyph-white align-middle">
+                                </span>
+                            </button>
+                        </div>                 
+                    </div>
+                </div>
+            </div>
+
+        </form>
 
         </div>
 
