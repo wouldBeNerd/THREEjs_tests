@@ -87,6 +87,7 @@ const red_dot_scales = [
  * TODO refactor to new new system
  * create object containing all THREE draw methods. 
  * export all THREE drawings to separate file and function
+ * !consider precurring materials by wrapping imported draw methods into a curry
  * 
  * create object containing all HUD THREE drawings with their names and coordinates, materials, etc
  * 
@@ -609,13 +610,49 @@ class ThreeDrawGrid extends Component{
                         ()=>{
                             console.log("starting")
 
-                            let points = [
-                                [ 0, 0], // shape.moveTo(p[0], p[1]);
-                                [ 0, 0, 12, 0, 12, 8], //shape.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5])
-                                [ 0, 8 ], //shape.lineTo(p[0], p[1]);
-                                [ 0, 8, -12, 8, -12, 0],
-                                [-12, 0],
-                            ]
+
+                            /**CALCULATE COG COORDS FOR EXTRUDE SHAPE */
+                            let inner_r = 4
+                            let outer_r = 8
+                            let [cx, cy] = [0,0]
+                            const xy_at_angle = (r/**radius */, a/*angle*/, cx, cy) =>{
+                                let x = cx + r * Math.cos(a)
+                                let y = cy + r * Math.sin(a)
+                                return [x, y]
+                            }
+                            console.log( xy_at_angle( 8, 45 - 5, 0, 0 ))
+                            console.log( xy_at_angle( 8, 45, 0, 0 ))
+                            console.log( xy_at_angle( 8, 45 + 5, 0, 0 ))
+                            const calc_tooth = (r, angle, cx, cy)=>{
+                                /* angle = 360 / 8 = 40 - 10 for gap size = 30 / 2 = 15 */
+                                let p_l = xy_at_angle(r, angle - 15, cx, cy) /**point left from center XY */
+                                let p_m = xy_at_angle(r, angle, cx, cy) /**point center XY*/
+                                let p_r = xy_at_angle(r, angle + 15, cx, cy) /**point right of center XY*/
+                                // console.log([ p_l[0], p_l[1], p_m[0], p_m[1], p_r[0], p_r[1]])
+                                return [ p_l[0], p_l[1], p_m[0], p_m[1], p_r[0], p_r[1]]
+                            } 
+                            const calc_tooth_invert = (r, angle, cx, cy)=>{
+                                /**10 degrees left */
+                                let p_u_l = xy_at_angle( inner_r ,angle + 15, cx, cy)
+                                let p_u_m = xy_at_angle( inner_r ,angle + 20, cx, cy)
+                                let p_u_r = xy_at_angle( inner_r ,angle + 25, cx, cy)
+                                return [ p_u_l[0], p_u_l[1], p_u_m[0], p_u_m[1], p_u_r[0], p_u_r[1]]
+                            }
+                            let points = []
+                            new Array(8).fill(360 / 8).map( ( degrees, i ) =>{ return i * degrees } ).forEach(( a, i )/**angle */=>{ 
+                                console.log(a, i)
+                                let tooth = calc_tooth(outer_r, a, cx, cy)  /**apex curve */
+                                let tooth_invert =  calc_tooth_invert(inner_r, a, cx, cy)/*right side*/ 
+                                if( i === 0) points.push([ tooth[0], tooth[1] ])
+                                points.push(tooth)
+                                points.push([tooth_invert[0], tooth_invert[1]]) /**connect with straight light */
+                                points.push(tooth_invert)
+                                points.push( xy_at_angle( outer_r, a + 25, cx, cy ))/**connecting line form inner to outer curve of next  */
+                            })
+
+                            // let points = [
+                            //     []
+                            // ]
 
                             let mesh = ExtrudeGeometry(points)
 
