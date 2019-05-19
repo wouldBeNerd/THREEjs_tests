@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import parse_type from "../workers/parse_type"
 
 import MakeTextSprite from "../threeJS_extensions/build/MakeTextSprite"
+import ExtrudeGeometry from "../threeJS_extensions/build/ExtrudeGeometry"
 import red_dot from "../../assets/red_dot.png"
 
 const round_to_x_curry = ( round_to)=>{
@@ -80,6 +81,17 @@ const red_dot_scales = [
     {x : 0.72, y : 0.72 },    
     {x : 0.75, y : 0.75 },    
 ]
+
+
+/**
+ * TODO refactor to new new system
+ * create object containing all THREE draw methods. 
+ * export all THREE drawings to separate file and function
+ * 
+ * create object containing all HUD THREE drawings with their names and coordinates, materials, etc
+ * 
+ * 
+ */
 
 
 class ThreeDrawGrid extends Component{
@@ -596,6 +608,19 @@ class ThreeDrawGrid extends Component{
                     ()=> this.draw_red_dot(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
                         ()=>{
                             console.log("starting")
+
+                            let points = [
+                                [ 0, 0], // shape.moveTo(p[0], p[1]);
+                                [ 0, 0, 12, 0, 12, 8], //shape.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5])
+                                [ 0, 8 ], //shape.lineTo(p[0], p[1]);
+                                [ 0, 8, -12, 8, -12, 0],
+                                [-12, 0],
+                            ]
+
+                            let mesh = ExtrudeGeometry(points)
+
+                            mesh.rotateX(Math.PI / 2)
+                            this.scene.add( mesh )
                              this.start()
                          }
                     )
