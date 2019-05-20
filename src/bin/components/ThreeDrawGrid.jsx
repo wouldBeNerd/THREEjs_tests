@@ -2,11 +2,14 @@ import * as THREE from 'three';
 // import TrackballControls from "../threeJS_extensions/TrackballControls";
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import parse_type from "../workers/parse_type"
+import calc_xy_on_circle from "../workers/calc_xy_on_circle"
 
 import MakeTextSprite from "../threeJS_extensions/build/MakeTextSprite"
 import ExtrudeGeometry from "../threeJS_extensions/build/ExtrudeGeometry"
 import red_dot from "../../assets/red_dot.png"
+import { MeshBasicMaterial } from 'three';
 
 const round_to_x_curry = ( round_to)=>{
     let pow = Math.pow( 10, round_to )
@@ -17,9 +20,34 @@ const round_to_x_curry = ( round_to)=>{
 }
 const round_2_dec = round_to_x_curry(2)
 const round_3_dec = round_to_x_curry(3)
+
+
+//GLOBALS CAPITAL VARIABELS PARAMS ======================================================================================================================
+//GLOBALS CAPITAL VARIABELS PARAMS ======================================================================================================================
+//GLOBALS CAPITAL VARIABELS PARAMS ======================================================================================================================
+//GLOBALS CAPITAL VARIABELS PARAMS ======================================================================================================================
+//GLOBALS CAPITAL VARIABELS PARAMS ======================================================================================================================
+//GLOBALS CAPITAL VARIABELS PARAMS ======================================================================================================================
+//GLOBALS CAPITAL VARIABELS PARAMS ======================================================================================================================
+
+
+/**EXTRUDE contains points/coords that can be used in ExtrudeGeometry to create shapes */
+const EXTRUDE = {
+    arrow : [[0, 0],[-0.7, 0],[-0.7, -2],[-1.5, -2],[ 0, -3.5],[1.5, -2],[0.7, -2],[0.7, 0]],
+    sqaure : [[0.9, 0.9], [-0.9, 0.9], [-0.9, -0.9], [0.9, -0.9]]
+}
+let TEST_MESH, TEST_ROTATE = 0
+let DEGREES_ARR = new Array(360).fill(0).map((z, i)=> i); 
+/**45 degrees in radeans */let RADS_45 = THREE.Math.degToRad(45)
+/**90 degrees in radeans */let RADS_90 = THREE.Math.degToRad(90) // same as Math.PI / 2
+/**180 degrees in radeans */let RADS_180 = THREE.Math.degToRad(180)
+/**270 degrees in radeans */let RADS_270 = THREE.Math.degToRad(270)
+
+let SCALE_I_INIT = 1
+
 /** REFACTORS SPRITE SIZE DEPENDING ON THE DEPTH OF Y CAMERA */
 const text_scale_factor = 10
-const text_scales = [
+const TEXT_SCALES = [
     { width_scale : 0.73, height_scale :	0.36,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     { width_scale : 0.73, height_scale :	0.36,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
     { width_scale : 1.47, height_scale :	0.73,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
@@ -54,35 +82,15 @@ const text_scales = [
     // { width_scale : 14, height_scale :	7,   alignV2_x: new THREE.Vector2(0.1, 1), alignV2_z: new THREE.Vector2(0, 0.8)},
 ]
 /** REFACTORS SPRITE SIZE DEPENDING ON THE DEPTH OF Y CAMERA */
-const red_dot_scale_factor = 10
-const red_dot_scales = [
-    {x : 0.03, y : 0.03 },
-    {x : 0.06, y : 0.06 },
-    {x : 0.09, y : 0.09 },
-    {x : 0.12, y : 0.12 },
-    {x : 0.15, y : 0.15 },
-    {x : 0.18, y : 0.18 },
-    {x : 0.21, y : 0.21 },
-    {x : 0.24, y : 0.24 },
-    {x : 0.27, y : 0.27 },
-    {x : 0.3, y : 0.3 },
-    {x : 0.33, y : 0.33 },
-    {x : 0.36, y : 0.36 },
-    {x : 0.39, y : 0.39 },
-    {x : 0.42, y : 0.42 },
-    {x : 0.45, y : 0.45 },
-    {x : 0.48, y : 0.48 },
-    {x : 0.51, y : 0.51 },
-    {x : 0.54, y : 0.54 },
-    {x : 0.57, y : 0.57 },
-    {x : 0.6, y : 0.6 },    
-    {x : 0.63, y : 0.63 },    
-    {x : 0.69, y : 0.69 },    
-    {x : 0.72, y : 0.72 },    
-    {x : 0.75, y : 0.75 },    
-]
-
-
+const RED_DOT_SCALE_FACTOR = 10
+/** contains one factor to apply to x y and z when scaling */
+const RED_DOT_SCALES = new Array(40).fill(0.03).map( (base_factor, i)=> base_factor * (i+1) )
+/**REFACTORS ARROW SIZE DEPENDING ON THE DEPTH OF CAMERA Y */
+const MOVE_ARROW_FACTOR = 10
+/** contains one factor to apply to X and Z when scaling keep Y at 0.1 */
+const MOVE_ARROW_SCALES = new Array(40).fill(0.15).map( (base_factor, i)=> base_factor * (i+1) )
+const ARROW_MATERIAL = new THREE.MeshBasicMaterial( {color:0x00ff00, opacity : 0.3, transparent:true})
+const ARROW_MATERIAL_HIGHLIGHT = new THREE.MeshBasicMaterial( {color:0x00ff00, opacity : 0.7, transparent:true})
 /**
  * TODO refactor to new new system
  * create object containing all THREE draw methods. 
@@ -102,20 +110,35 @@ class ThreeDrawGrid extends Component{
 
         },
         mouse : {
+            down : false,
             x : 0,
             y : 0,
             snap_increment : 1,// ! DO NOT SET TO 0 /* value indicated the nearest increment to round to (1,2,5) */
-            snap_decimal : 1,// ! DO NOT SET TO 0 /*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/
+            snap_decimal : 100,// ! DO NOT SET TO 0 /*value indicates the product to divide and multiply during conversion 1 = m, 10 = dm, 100 = cm*/
             snap_point : false,
         },
         red_dot : {
             TObj : null,
-            scale_i : 1,
+            scale_i : SCALE_I_INIT,
         },
+        move_arrows : {
+            TObj : null,
+            TObj_up : null,
+            TObj_down : null,
+            TObj_left : null,
+            TObj_right : null,
+            TObj_center : null,
+            scale_i : SCALE_I_INIT,
+            hover_up : false,
+            hover_down : false,
+            hover_left : false,
+            hover_right : false,        
+            hover_center : false    
+        },        
         ruler : {
-            text_scale_i : 1,/**defined which scaling object to get from text_scale */
-            texts_x : [],
-            texts_z : [],
+            text_scale_i : SCALE_I_INIT,/**defined which scaling object to get from text_scale */
+            texts_x : [],//TObjs
+            texts_z : [],//TObjs
         },
         live_ruler : {
             red:null,/** x axis */
@@ -124,11 +147,11 @@ class ThreeDrawGrid extends Component{
             red_distance: 0,
             blue_distance: 0,
             green_distance: 0,
-            lastV3: new THREE.Vector3( 0,0,0),
-            history : [/**{ shape_type, V3s} */]
+            // lastV3: new THREE.Vector3( 0,0,0),
+            // history : [/**{ shape_type, V3s} */]
         },
         plane : {
-            plane : null,
+            TObj : null,
             width : 500,
             height : 500
         },
@@ -154,6 +177,7 @@ class ThreeDrawGrid extends Component{
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000); 
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
+    move_arrows = new THREE.Group();
     red_dot = null/* sprite that points out mouse location as snapped to grid*/
     constructor(props){
         super(props)
@@ -161,19 +185,29 @@ class ThreeDrawGrid extends Component{
         this.start = this.start.bind(this)
         this.stop = this.stop.bind(this)
         this.animate = this.animate.bind(this)
+        this.set_1_state = this.set_1_state.bind(this)
         this.set_prop = this.set_prop.bind(this)
         this.set_prop_from_input_event = this.set_prop_from_input_event.bind(this)
         this.new_or_state = this.new_or_state.bind(this)
         this.remove_from_scene = this.remove_from_scene.bind(this)
+        //DRAW
         this.draw_plane = this.draw_plane.bind(this)
         this.draw_plane_rulers = this.draw_plane_rulers.bind(this)
         this.draw_red_dot = this.draw_red_dot.bind(this)
+        this.draw_point_move_arrows = this.draw_point_move_arrows.bind(this)
+        this.draw_2_point_ruler = this.draw_2_point_ruler.bind(this)
+
+        //UPDATE
         this.on_mouse_move = this.on_mouse_move.bind(this)
         this.loc_parse = this.loc_parse.bind(this)
-        this.draw_2_point_ruler = this.draw_2_point_ruler.bind(this)
+
         this.update_ruler_text_scales = this.update_ruler_text_scales.bind(this)
         this.update_red_dot_scale = this.update_red_dot_scale.bind(this)
+        this.update_move_arrows_scale = this.update_move_arrows_scale.bind(this)
+
+        //MOUSE
         this.prevent_bubbles = this.prevent_bubbles.bind(this)
+        this.drag_active = this.drag_active.bind(this)
 
         //KEYBOARD
         this.activate_keyboard_button = this.activate_keyboard_button.bind(this)
@@ -197,6 +231,8 @@ class ThreeDrawGrid extends Component{
         
         this.custom_event_listeners_add = this.custom_event_listeners_add.bind(this)
         this.custom_event_listeners_remove = this.custom_event_listeners_remove.bind(this)
+        this.raycast_mouse_position =  this.raycast_mouse_position.bind(this)
+
         
     }
     _isMounted = false
@@ -205,6 +241,8 @@ class ThreeDrawGrid extends Component{
 
         this.init3D()
     }
+
+
     new_or_state(property, category, funct_fn ){
         if( this.state[property][category] === null){
             return funct_fn();
@@ -278,10 +316,10 @@ class ThreeDrawGrid extends Component{
             camera.lookAt( new THREE.Vector3( this.state.camera.look_x, this.state.camera.look_y, this.state.camera.look_z ) )
         }
         //! if scale out of array range use last
-        let red_dot_i = Math.floor( this.state.camera.y / red_dot_scale_factor)
+        let red_dot_i = Math.floor( this.state.camera.y / RED_DOT_SCALE_FACTOR)
         if(red_dot_i !== this.state.red_dot.scale_i && 
             this.state.red_dot.TObj !== null &&
-            red_dot_scales[ red_dot_i ] !== undefined
+            RED_DOT_SCALES[ red_dot_i ] !== undefined
         ){
             let new_state = {...this.state}
             new_state.red_dot.scale_i = red_dot_i
@@ -296,9 +334,26 @@ class ThreeDrawGrid extends Component{
         }
 
 
+        let move_arrows_i = Math.floor( this.state.camera.y / MOVE_ARROW_FACTOR)
+        if(move_arrows_i !== this.state.move_arrows.scale_i && 
+            this.state.move_arrows.TObj !== null &&
+            MOVE_ARROW_SCALES[ move_arrows_i ] !== undefined
+        ){
+            let new_state = {...this.state}
+            new_state.move_arrows.scale_i = move_arrows_i
+            this.setState(new_state, ()=>{
+                this.update_move_arrows_scale()
+            })
+        }else if(move_arrows_i !== this.state.move_arrows.scale_i){
+            let new_state = {...this.state}
+            new_state.move_arrows.scale_i = move_arrows_i
+            this.setState(new_state, ()=>{
+            })
+        }
+
         let new_scale_i = Math.floor( this.state.camera.y / text_scale_factor )
         if(new_scale_i !== this.state.ruler.text_scale_i && 
-            text_scales[ new_scale_i ] !== undefined &&
+            TEXT_SCALES[ new_scale_i ] !== undefined &&
             this.state.ruler.texts_x.children !== undefined && 
             this.state.ruler.texts_z.children !== undefined 
         ){
@@ -317,7 +372,7 @@ class ThreeDrawGrid extends Component{
     }
     update_ruler_text_scales(){
         /**reapply the scale and align ratio of all texts in texts_x and texts_y */
-        let scale = text_scales[ this.state.ruler.text_scale_i  ]
+        let scale = TEXT_SCALES[ this.state.ruler.text_scale_i  ]
         console.log("scaling", scale)
         let { alignV2_x, alignV2_z, width_scale, height_scale} = scale
         let new_ruler_texts_x = this.state.ruler.texts_x.children.map( text => {
@@ -334,11 +389,88 @@ class ThreeDrawGrid extends Component{
         })        
     }
     update_red_dot_scale(){
-        let new_scale = red_dot_scales[ this.state.red_dot.scale_i ]
-        this.state.red_dot.TObj.scale.set( new_scale.x, new_scale.y, 0.2 )
+        let new_scale = RED_DOT_SCALES[ this.state.red_dot.scale_i ]
+        this.state.red_dot.TObj.scale.set( new_scale, new_scale, 0.01 )
     }
+    update_move_arrows_scale(){
+        let new_scale = MOVE_ARROW_SCALES[ this.state.move_arrows.scale_i ]
+        this.state.move_arrows.TObj.scale.set( new_scale, 0.01, new_scale )
+    }
+//DRAW DRAW DRAW DRAW===============================================================================================================
+//DRAW DRAW DRAW DRAW===============================================================================================================
+//DRAW DRAW DRAW DRAW===============================================================================================================
+//DRAW DRAW DRAW DRAW===============================================================================================================
+//DRAW DRAW DRAW DRAW===============================================================================================================
+//DRAW DRAW DRAW DRAW===============================================================================================================
+//DRAW DRAW DRAW DRAW===============================================================================================================
+    draw_2_point_ruler( cb ){
+        
+    }
+    draw_point_move_arrows( cb ){
+        if(this.state.move_arrows.TObj === null){
 
-    text_sprite( message, { width_scale=2, height_scale=1.5, alignV2=new THREE.Vector2(0,1), textColor = {r:255, g:255, b:255, a:1}, sizeAttenuation=true} ){
+            let arrows = this.move_arrows
+            // let material = new THREE.MeshBasicMaterial( {color:0x00ff00, opacity : 0.3, transparent:true})
+
+            let up = ExtrudeGeometry(EXTRUDE.arrow, ARROW_MATERIAL, { depth: 0.01, bevelEnabled: true,bevelThickness: 0.2, bevelSize: 0.1,}, {x:0.3, y:0.3, z:0.3} )
+            up.rotateX(RADS_90)
+            up.name = "arrow_up"
+
+            let down = up.clone()
+            down.rotateZ(RADS_180)
+            down.name = "arrow_down"
+            
+            let left = up.clone()
+            left.rotateZ(RADS_270)
+            left.name = "arrow_left"
+
+            let right = up.clone()
+            right.rotateZ(RADS_90)
+            right.name = "arrow_right"
+
+            let center = ExtrudeGeometry(EXTRUDE.sqaure, ARROW_MATERIAL, { depth: 0.01, bevelEnabled: true,bevelThickness: 0.2, bevelSize: 0.1,}, {x:0.3, y:0.3, z:0.3} )
+            center.rotateX(RADS_90)
+            
+            center.name = "arrow_center"
+
+            //move arrows
+            const spacing = 0.7
+            up.position.set(0, 0, -spacing)
+            down.position.set(0, 0, spacing)
+            left.position.set(-spacing, 0, 0)
+            right.position.set(spacing, 0, 0)
+            center.position.set(0,0,0)
+
+            // up_arrow.scale.set(new THREE.Vector3(0.3, 0.3, 0.3))
+            console.log(up)
+            arrows.add(up)
+            arrows.add(down)
+            arrows.add(left)
+            arrows.add(right)
+            arrows.add(center)
+            this.scene.add(arrows)
+
+            //scale to scale_i
+            const scale = MOVE_ARROW_SCALES[ this.state.move_arrows.scale_i ]
+            console.log(scale)
+            arrows.scale.set(scale, 0.1, scale)
+
+            let new_state = {...this.state}
+            new_state.move_arrows.TObj = arrows
+            new_state.move_arrows.TObj_up = up
+            new_state.move_arrows.TObj_down = down
+            new_state.move_arrows.TObj_left = left
+            new_state.move_arrows.TObj_right = right
+            new_state.move_arrows.TObj_center = center
+
+            
+            this.setState(new_state, cb)
+        }else{
+            cb()
+        }
+
+    }
+    draw_text_sprite( message, { width_scale=2, height_scale=1.5, alignV2=new THREE.Vector2(0,1), textColor = {r:255, g:255, b:255, a:1}, sizeAttenuation=true} ){
         // TODO depending on the z location of camera the scale of the letters must be adjusted 
         let sprite = MakeTextSprite( message, { textColor, sizeAttenuation } )
         // textSprite.rotation.x = Math.PI / 2
@@ -347,15 +479,12 @@ class ThreeDrawGrid extends Component{
         sprite.scale.set( width_scale , height_scale)   
         return sprite
         // this.scene.add(sprite)
-    }
-    draw_2_point_ruler( cb ){
-        
-    }
+    }    
     draw_plane_rulers( cb ){//RUNS AT INIT THEREFORE IN A CALLBACK CHAIN
 
         /**get text scale */
         let scale_i = this.state.ruler.text_scale_i
-        let scale = text_scales[scale_i]
+        let scale = TEXT_SCALES[scale_i]
 
         let w_m = this.state.plane.width / 2
         let h_m = this.state.plane.height / 2
@@ -376,7 +505,7 @@ class ThreeDrawGrid extends Component{
             if( modulo === 0 ){//0, 10, 20...
                 length = 0.25
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_x, width_scale:scale.width_scale, height_scale:scale.height_scale})
+                    let text = this.draw_text_sprite( `${i}`, {alignV2:scale.alignV2_x, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( i , 0.001, length )
                     neg_text.position.set( -i , 0.001, length )
@@ -386,7 +515,7 @@ class ThreeDrawGrid extends Component{
             }else if( modulo === 5){//5, 15, 25, ...
                 length = 0.15
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_x, width_scale:scale.width_scale, height_scale:scale.height_scale})
+                    let text = this.draw_text_sprite( `${i}`, {alignV2:scale.alignV2_x, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( i , 0.001, length )
                     neg_text.position.set( -i , 0.001, length )
@@ -407,7 +536,7 @@ class ThreeDrawGrid extends Component{
             if( modulo === 0 ){//0, 10, 20...
                 length = 0.25
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_z, width_scale:scale.width_scale, height_scale:scale.height_scale})
+                    let text = this.draw_text_sprite( `${i}`, {alignV2:scale.alignV2_z, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( length , 0.001, i )
                     neg_text.position.set( length , 0.001, -i )
@@ -417,7 +546,7 @@ class ThreeDrawGrid extends Component{
             }else if( modulo === 5){//5, 15, 25, ...
                 length = 0.15
                 if(i !== 0){
-                    let text = this.text_sprite( `${i}`, {alignV2:scale.alignV2_z, width_scale:scale.width_scale, height_scale:scale.height_scale})
+                    let text = this.draw_text_sprite( `${i}`, {alignV2:scale.alignV2_z, width_scale:scale.width_scale, height_scale:scale.height_scale})
                     let neg_text = text.clone()
                     text.position.set( length , 0.001, i )
                     neg_text.position.set( length , 0.001, -i )
@@ -464,12 +593,13 @@ class ThreeDrawGrid extends Component{
         let mesh = new THREE.Mesh( geometry, material)
         mesh.rotation.x = Math.PI / 2
         mesh.position.set(0, 0, 0)
+        mesh.name = "plane"
         // mesh.rotation.y = 0.09
         console.log(mesh)
         this.scene.add(mesh)
 
         let new_state = this.state
-        new_state.plane.plane = mesh
+        new_state.plane.TObj = mesh
         this.setState( new_state ,()=>{
             console.log("redrew grid")
             geometry.dispose()
@@ -478,8 +608,24 @@ class ThreeDrawGrid extends Component{
         })
     }
 
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+//CONTROLS MOUSE KEYS EVENTLISTENERS===============================================================================================================
+
+
+
     modes = {//!modes must ALWAYS CONTAIN active_keys, EVEN IF EMPTY (CRASH ANIMATE LOOP)
         navigate:{
+            mouse_drag : ()=>{
+
+                console.log("navigate drag")
+
+            },
             active_keys : {
                 "PageDown" : this.move_camera.in,
                 "PageUp" : this.move_camera.out,
@@ -490,6 +636,23 @@ class ThreeDrawGrid extends Component{
             }
         },
         draw_polygon:{
+            mouse_drag : ()=>{
+                console.log("draw_polygon drag")
+                let set_x = this.state.move_arrows.hover_left_right
+                let set_y = this.state.move_arrows.hover_up_down
+
+                //TODO change to position of point rather than move arrow
+                let x = this.move_arrows.position.x
+                let y = this.move_arrows.position.y
+                let z = this.move_arrows.position.z
+
+                if(set_x) x = this.state.mouse.x
+                if(set_y) z = this.state.mouse.y
+                
+                //set arrow 
+                this.move_arrows.position.set(x, y, z)
+                
+            },
             active_keys : {
                 // "PageDown" : this.move_camera.in,
                 // "PageUp" : this.move_camera.out,
@@ -501,14 +664,18 @@ class ThreeDrawGrid extends Component{
         },
 
     }
+    drag_active(){
+        this.modes[ this.state.active_mode ].mouse_drag()
+    }
     reset_key_variables(event){
         if(Object.keys(this.state.active_keys).length === 0){
             if(this.state.moveing.speed > 0) this.set_prop("moveing", "speed", ()=>{return 0} )
         }
     }
     activate_keyboard_button(event){
-            if (event.repeat === true){ return; }
-            if (event.defaultPrevented) {
+            if ( event.key === "F5" || event.key ==="F12") return;
+            if ( event.repeat === true){ return; }
+            if ( event.defaultPrevented) {
               return; // Do nothing if the event was already processed
             }
             //for keys that need to be held down to move faster
@@ -519,8 +686,8 @@ class ThreeDrawGrid extends Component{
                 this.setState(new_state, console.log(Object.keys( this.state.active_keys)))
             }
             let registered_keys = {
-                "1" : ()=>{console.log(event.key)},
-                "2" : ()=>{console.log(event.key)},
+                "1" : ()=>{console.log(event.key, "navigate"); this.set_1_state("active_mode", ()=>"navigate") },
+                "2" : ()=>{console.log(event.key, "draw_polygon"); this.set_1_state("active_mode", ()=>"draw_polygon") },
                 "3" : ()=>{console.log(event.key)},
                 "Enter" : ()=>{console.log(event.key)},
             }
@@ -562,16 +729,160 @@ class ThreeDrawGrid extends Component{
     }    
     custom_event_listeners_add(){
         this.mount.addEventListener( 'mousemove', this.on_mouse_move, false );
+        this.mount.addEventListener( 'mousedown', ()=>this.set_prop("mouse", "down",()=>{return true}), false)
+        this.mount.addEventListener( 'mouseup', ()=>this.set_prop("mouse", "down",()=>{return false}), false)
         window.addEventListener("keydown", this.activate_keyboard_button, true );
         window.addEventListener("keyup", this.deactivate_keyboard_button, true );
-        
-        // window.addEventListener( 'mousemove', this.on_mouse_move, false );
     }
     custom_event_listeners_remove(){
         this.mount.removeEventListener( 'mousemove', this.on_mouse_move, false );
+        this.mount.removeEventListener( 'mousedown', ()=>this.set_prop("mouse", "down",()=>{return true}), false)
+        this.mount.removeEventListener( 'mouseup', ()=>this.set_prop("mouse", "down",()=>{return false}), false)        
         window.removeEventListener("keydown", this.activate_keyboard_button, true );
         window.removeEventListener("keyup", this.deactivate_keyboard_button, true );
     }    
+//RAYCASTING ===========================================================================================================================
+//RAYCASTING ===========================================================================================================================
+//RAYCASTING ===========================================================================================================================
+//RAYCASTING ===========================================================================================================================
+//RAYCASTING ===========================================================================================================================
+
+    raycast_mouse_position(){
+        /**
+         * 
+        ```
+        raycastnames = {
+            plane : "captures mouse location on drawing plane",
+            arrow_up : "moves point up when dragged",
+            arrow_down : "moves point up when dragged",
+            arrow_left : "moves point up when dragged",
+            arrow_right : "moves point up when dragged",
+        }
+        ```
+         */
+        this.raycaster.setFromCamera( this.mouse, this.camera );
+        let intersects
+
+        if(//prevent raycasting if objects do not exist
+            this.state.move_arrows.TObj_up !== null &&
+            this.state.move_arrows.TObj_down !== null &&
+            this.state.move_arrows.TObj_left !== null &&
+            this.state.move_arrows.TObj_right !== null &&
+            this.state.move_arrows.TObj_centert !== null &&
+            this.state.plane.TObj !== null 
+        ){//CALCULATES WHERE THE MOUSE IS ON THE DRAWING PLANE WHICH IS ON Y 0
+            intersects = this.raycaster.intersectObjects( 
+                [
+                    this.state.move_arrows.TObj_up,
+                    this.state.move_arrows.TObj_down,
+                    this.state.move_arrows.TObj_left,
+                    this.state.move_arrows.TObj_right,
+                    this.state.move_arrows.TObj_center,
+                    this.state.plane.TObj//keep plane at bottom index
+                ]
+             );
+            if(intersects.length > 0){
+                // console.log(intersects)
+                let new_state = this.state
+                // console.log(  this.loc_parse( intersects[intersects.length -1].point.x ))
+                const actions = {
+                    "arrow_up" : (TObj)=>{ 
+                        if(this.state.mouse.down)return;
+                        if(new_state.move_arrows.hover_up_down) return;
+                        new_state.move_arrows.TObj_up.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_down.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_left.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_right.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_center.material = ARROW_MATERIAL
+
+                        new_state.move_arrows.hover_up_down = true
+                        new_state.move_arrows.hover_left_right = false
+
+                    },
+                    "arrow_down" : (TObj)=>{ 
+                        if(this.state.mouse.down)return;
+                        if(new_state.move_arrows.hover_up_down) return;
+                        new_state.move_arrows.TObj_up.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_down.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_left.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_right.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_center.material = ARROW_MATERIAL
+
+                        new_state.move_arrows.hover_up_down = true
+                        new_state.move_arrows.hover_left_right = false
+                    },
+                    "arrow_left" : (TObj)=>{ 
+                        if(this.state.mouse.down)return;
+                        if( new_state.move_arrows.hover_left_right) return;
+                        new_state.move_arrows.TObj_up.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_down.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_left.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_right.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_center.material = ARROW_MATERIAL
+
+                        new_state.move_arrows.hover_up_down = false
+                        new_state.move_arrows.hover_left_right = true
+                    },
+                    "arrow_right" : (TObj)=>{ 
+                        if(this.state.mouse.down)return;
+                        if(new_state.move_arrows.hover_left_right) return;
+                        new_state.move_arrows.TObj_up.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_down.material = ARROW_MATERIAL
+                        new_state.move_arrows.TObj_left.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_right.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_center.material = ARROW_MATERIAL
+
+                        new_state.move_arrows.hover_up_down = false
+                        new_state.move_arrows.hover_left_right = true
+                    },
+                    "arrow_center" : (TObj)=>{ 
+                        if(this.state.mouse.down)return;
+                        if(new_state.move_arrows.hover_up_down && new_state.move_arrows.hover_left_right ) return;
+                        new_state.move_arrows.TObj_up.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_down.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_left.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_right.material = ARROW_MATERIAL_HIGHLIGHT
+                        new_state.move_arrows.TObj_center.material = ARROW_MATERIAL_HIGHLIGHT
+
+                        new_state.move_arrows.hover_up_down = true
+                        new_state.move_arrows.hover_left_right = true
+                    },                    
+                    "plane" : (TObj)=>{
+                        new_state.mouse.x = this.loc_parse( TObj.point.x )
+                        new_state.mouse.y = this.loc_parse( TObj.point.z )//z because the plane has been rotated                        
+                    }                                                     
+                }
+                intersects.forEach( (TObj, i )=> {
+                    actions[ TObj.object.name ](TObj)
+                })
+                const remove_arrow_highlights = ()=>{
+                    if( this.state.mouse.down ) return ;
+                    new_state.move_arrows.TObj_up.material = ARROW_MATERIAL
+                    new_state.move_arrows.TObj_down.material = ARROW_MATERIAL
+                    new_state.move_arrows.TObj_left.material = ARROW_MATERIAL
+                    new_state.move_arrows.TObj_right.material = ARROW_MATERIAL
+                    new_state.move_arrows.TObj_center.material = ARROW_MATERIAL
+                    new_state.move_arrows.hover_up_down = false
+                    new_state.move_arrows.hover_left_right = false               
+                }
+                if(intersects.length === 1 && intersects[0].object.name ==="plane") remove_arrow_highlights();
+                
+
+                this.setState(new_state)
+            }
+
+        }
+
+    }
+//INIT ANIMATE START STOP===============================================================================================================
+//INIT ANIMATE START STOP===============================================================================================================
+//INIT ANIMATE START STOP===============================================================================================================
+//INIT ANIMATE START STOP===============================================================================================================
+//INIT ANIMATE START STOP===============================================================================================================
+//INIT ANIMATE START STOP===============================================================================================================
+//INIT ANIMATE START STOP===============================================================================================================
+
+
     init3D(){
 
 
@@ -607,59 +918,15 @@ class ThreeDrawGrid extends Component{
             this.draw_plane( 
                 ()=> this.draw_plane_rulers(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
                     ()=> this.draw_red_dot(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
-                        ()=>{
-                            console.log("starting")
+                        ()=> this.draw_point_move_arrows(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
+                            ()=>{
+                                console.log("starting")
 
 
-                            /**CALCULATE COG COORDS FOR EXTRUDE SHAPE */
-                            let inner_r = 4
-                            let outer_r = 8
-                            let [cx, cy] = [0,0]
-                            const xy_at_angle = (r/**radius */, a/*angle*/, cx, cy) =>{
-                                let x = cx + r * Math.cos(a)
-                                let y = cy + r * Math.sin(a)
-                                return [x, y]
+                                this.start()
                             }
-                            console.log( xy_at_angle( 8, 45 - 5, 0, 0 ))
-                            console.log( xy_at_angle( 8, 45, 0, 0 ))
-                            console.log( xy_at_angle( 8, 45 + 5, 0, 0 ))
-                            const calc_tooth = (r, angle, cx, cy)=>{
-                                /* angle = 360 / 8 = 40 - 10 for gap size = 30 / 2 = 15 */
-                                let p_l = xy_at_angle(r, angle - 15, cx, cy) /**point left from center XY */
-                                let p_m = xy_at_angle(r, angle, cx, cy) /**point center XY*/
-                                let p_r = xy_at_angle(r, angle + 15, cx, cy) /**point right of center XY*/
-                                // console.log([ p_l[0], p_l[1], p_m[0], p_m[1], p_r[0], p_r[1]])
-                                return [ p_l[0], p_l[1], p_m[0], p_m[1], p_r[0], p_r[1]]
-                            } 
-                            const calc_tooth_invert = (r, angle, cx, cy)=>{
-                                /**10 degrees left */
-                                let p_u_l = xy_at_angle( inner_r ,angle + 15, cx, cy)
-                                let p_u_m = xy_at_angle( inner_r ,angle + 20, cx, cy)
-                                let p_u_r = xy_at_angle( inner_r ,angle + 25, cx, cy)
-                                return [ p_u_l[0], p_u_l[1], p_u_m[0], p_u_m[1], p_u_r[0], p_u_r[1]]
-                            }
-                            let points = []
-                            new Array(8).fill(360 / 8).map( ( degrees, i ) =>{ return i * degrees } ).forEach(( a, i )/**angle */=>{ 
-                                console.log(a, i)
-                                let tooth = calc_tooth(outer_r, a, cx, cy)  /**apex curve */
-                                let tooth_invert =  calc_tooth_invert(inner_r, a, cx, cy)/*right side*/ 
-                                if( i === 0) points.push([ tooth[0], tooth[1] ])
-                                points.push(tooth)
-                                points.push([tooth_invert[0], tooth_invert[1]]) /**connect with straight light */
-                                points.push(tooth_invert)
-                                points.push( xy_at_angle( outer_r, a + 25, cx, cy ))/**connecting line form inner to outer curve of next  */
-                            })
 
-                            // let points = [
-                            //     []
-                            // ]
-
-                            let mesh = ExtrudeGeometry(points)
-
-                            mesh.rotateX(Math.PI / 2)
-                            this.scene.add( mesh )
-                             this.start()
-                         }
+                        )
                     )
                 )
             )
@@ -677,39 +944,31 @@ class ThreeDrawGrid extends Component{
     }
     previously_intersected = []
     animate = () => {
+
         //!check activate_keys against active_keys in modes , trigger one iteration if mode and active key is valid
         if( this.modes[ this.state.active_mode ]["active_keys"] ){
             Object.keys( this.state.active_keys ).forEach( active_key => {
                 if(this.modes[ this.state.active_mode ]["active_keys"][ active_key ]) this.modes[ this.state.active_mode ]["active_keys"][ active_key ]()
             })
         }
+        //!set state.mouse.x  and state.mouse.y
+        this.raycast_mouse_position()
 
-
-        this.raycaster.setFromCamera( this.mouse, this.camera );
-        let intersects
-
-        if( this.state.plane.plane !== null ){//CALCULATES WHERE THE MOUSE IS ON THE DRAWING PLANE WHICH IS ON Y 0
-            intersects = this.raycaster.intersectObjects( [this.state.plane.plane] );
-            if(intersects.length > 0){
-                let new_state = this.state
-                // console.log(  this.loc_parse( intersects[intersects.length -1].point.x ))
-                new_state.mouse.x = this.loc_parse( intersects[intersects.length -1].point.x )
-                new_state.mouse.y = this.loc_parse( intersects[intersects.length -1].point.z )
-                this.setState(new_state)
-            }
-
-        }
-
-        if( this.red_dot ){//PAINTS RED DOT IN NEW POSITION
-            this.red_dot.position.set( this.state.mouse.x, 0.1, this.state.mouse.y  )
-        }
-
+        //!PAINTS RED DOT IN NEW POSITION
+        if( this.red_dot ) this.red_dot.position.set( this.state.mouse.x, 0.1, this.state.mouse.y  )
+        //!MOVES ARROW IF HOVERED AND MOUSE DOWN
+        if( this.state.mouse.down ) this.drag_active();
 
        this.render3D()//this.renderer.render
        this.frameId = window.requestAnimationFrame(this.animate)
     }
     render3D(){
         this.renderer.render(this.scene, this.camera);
+    }
+    set_1_state( property, set_fn, cb_fn = ()=>{} ){
+        let new_state = this.state
+        new_state[property] = set_fn()
+        this.setState( new_state, cb_fn)
     }
     set_prop(category, property, set_fn, cb_fn = ()=>{} ){
         let new_state = this.state
@@ -855,67 +1114,54 @@ ThreeDrawGrid.propTypes = {
   }
   export default ThreeDrawGrid
 
-  /** DEPRECATED
-   * 
-   * ZDEP draw_grid
-```jsx
-    draw_grid(){
-        let scene = this.scene
-        //remove from scene if grid exists
-        this.remove_from_scene( "grid", scene)
-        this.state.grid.interactive_points.forEach( (gp, gi)=> this.remove_from_scene( `gridp${gi}`, scene))
-        //redraw new grid
-        let size = this.state.grid.size+0, step = this.state.grid.step+0;
-        console.log(size, step)
-        let geometry = new THREE.Geometry();
-        let material = new THREE.LineBasicMaterial({color:0x333333, opacity : 0.3, transparent:false, linewidth : 10})
+/**
+* important terms
+* console.log( THREE.Math.euclideanModulo(11, 3) ) // same as % oeprator
+* 
+* LERP = Linear Interpolation (give 2 vectors or points and  %/decimal place)
+* it will than return a point between the 2 points depending on the decimal
+* mimics straight line movement between 2 points
+*   THREE.Math.degToRad( deg )
+*   THREE.Math.
+*   THREE.Math.lerp( x, y, t)
+*   Vector3.lerpVectors(v1, v2, t)
+* 
+* 
+* 
+```
+    const calc_xy_on_circle = (r, a, cx , cy) =>{
+        //! angle converted to radians
+        let radians = a * Math.PI / 180 
+        let x = Math.cos(radians) * (cx + r)
+        let y = Math.sin(radians) * (cy + r)
+        return [x, y]
+    }
 
-        for(let i = -size; i <= size; i += step){
-
-            geometry.vertices.push( new THREE.Vector3( -size , - 0.04, i));
-            geometry.vertices.push( new THREE.Vector3(  size , - 0.04, i));
-
-            geometry.vertices.push( new THREE.Vector3( i , - 0.04, -size));
-            geometry.vertices.push( new THREE.Vector3( i , - 0.04,  size));
-
-        }
-
-        let grid = new THREE.LineSegments( geometry, material ) 
-        grid.name = "grid"
-
-
-        scene.add(grid);
-
-
-        let points = new Array((size * 2) / step).fill(0).map( (zero, i) => i * step + (-size) )
-        points.push(size)//add the last size one
-        let interactive_points = []
-        
-        let sphere_geometry = new THREE.SphereGeometry( 0.2, 32, 32 );
-        points.forEach( (ptx, xi) => {
-            points.forEach( (ptz, zi) => {
-                let sphere_material = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0})
-                // let geometry = new THREE.Sphere(new THREE.Vector3(ptx, -0.04, ptz), 0.3);
-                let mesh = new THREE.Mesh(sphere_geometry, sphere_material)
-                mesh.position.set( ptx, -0.02, ptz )
-                mesh.name = `gridp${xi+zi}`
-                scene.add(mesh)
-                interactive_points.push(mesh)
-            })
-        })
-
-
-        let new_state = this.state
-        new_state.grid.grid = grid
-        new_state.grid.interactive_points = interactive_points
-        this.setState( new_state ,()=>{
-            console.log("redrew grid")
-            geometry.dispose()
-            material.dispose()
-            this.start()
-        })
-
-
+    const calc_xy_on_circle2 = (r, a, cx , cy) =>{
+        //! angle converted to radians
+        let radians = THREE.Math.degToRad(a)
+        let V3 = new THREE.Vector3( cx , cy, 0)
+        let c = new THREE.Cylindrical( r, radians, cy)
+        let new_V3 = V3.setFromCylindrical( c )
+        return [V3.z, V3.x]
     }
 ```
-   */
+* EXAMPLE OF ROTATION AROUND SPHERICAL POSITION (ORBITTING)
+*
+*
+```
+    let sphere_geo = new THREE.SphereGeometry(1, 8, 8)
+    let sphere_mat = new THREE.MeshBasicMaterial({color: 0x993333, wireframe: true})
+    TEST_MESH = new THREE.Mesh( sphere_geo, sphere_mat)
+    this.scene.add(TEST_MESH)
+    //! convert degrees to radians 
+    console.log( TEST_MESH.position.setFromSpherical( new THREE.Spherical( 10, THREE.Math.degToRad(45), THREE.Math.degToRad(45)) ) )
+    console.log(TEST_MESH)
+    //! THIS PART GOES IN animate
+    TEST_ROTATE += 0.03
+    TEST_MESH.position.setFromSpherical( new THREE.Spherical( 10, TEST_ROTATE , TEST_ROTATE) ) 
+```
+*
+*
+*
+*/

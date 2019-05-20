@@ -38,18 +38,20 @@ import * as THREE from 'three';
  * @param {[[number]]} points 
  * @param {new THREE.MeshBasicMaterial} material 
  * @param {{ steps: number, depth: number, bevelEnabled:boolean, bevelSize:number, bevelOffset:number, bevelSegments:number }} extrudeSettings 
+ * @param {{x:number, y:number, z:number}} scale_geometry scale the geometry OPTIONAL
  */
 const ExtrudeGeometry = (points, 
-    material = new THREE.MeshBasicMaterial( { color: 0x00ff00, wireframe:true } ),  
+    material = new THREE.MeshBasicMaterial( { color: 0x00ff00, /*wireframe:true */} ),  
     extrudeSettings = {
         steps: 2,
-        depth: 2,
+        depth: 0.4,
         bevelEnabled: true,
-        bevelThickness: 1,
-        bevelSize: 1,
+        bevelThickness: 0.2,
+        bevelSize: 0.2,
         bevelOffset: 0,
-        bevelSegments: 1
-    } 
+        bevelSegments: 4
+    },
+    scale_geometry 
 ) => {
 
     let shape = new THREE.Shape()
@@ -58,8 +60,9 @@ const ExtrudeGeometry = (points,
         if(p.length === 6) shape.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5])//curve also added if i === 0
         else if( i !== 0) shape.lineTo(p[0], p[1]);
     })
-
+    
     let geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+    if(scale_geometry) geometry.scale( scale_geometry.x, scale_geometry.y, scale_geometry.z)
     let mesh = new THREE.Mesh( geometry, material ) ;
     return mesh
 
