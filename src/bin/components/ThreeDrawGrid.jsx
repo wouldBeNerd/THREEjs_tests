@@ -179,6 +179,10 @@ class ThreeDrawGrid extends Component{
     mouse = new THREE.Vector2();
     move_arrows = new THREE.Group();
     red_dot = null/* sprite that points out mouse location as snapped to grid*/
+    red_line_x = null// connects red dot to X ruler
+    red_line_y = null// connects red dot to Y ruler
+    red_text_x = null// displays x distance between ruler and red_dot
+    red_text_y = null// displays y distance between ruler and red_dot
     constructor(props){
         super(props)
         this.render3D = this.render3D.bind(this)
@@ -194,6 +198,9 @@ class ThreeDrawGrid extends Component{
         this.draw_plane = this.draw_plane.bind(this)
         this.draw_plane_rulers = this.draw_plane_rulers.bind(this)
         this.draw_red_dot = this.draw_red_dot.bind(this)
+        this.draw_red_lines = this.draw_red_lines.bind(this)
+        this.draw_red_coords = this.draw_red_coords.bind(this)
+
         this.draw_point_move_arrows = this.draw_point_move_arrows.bind(this)
         this.draw_2_point_ruler = this.draw_2_point_ruler.bind(this)
 
@@ -572,6 +579,88 @@ class ThreeDrawGrid extends Component{
 
         this.setState(new_state, cb)// ! /*KEEP LAST AS IT CONTAINS CALLBACK */
     }
+    draw_red_lines( cb ){//RUNS AT INIT THEREFORE IN A CALLBACK CHAIN
+        let material = new THREE.LineBasicMaterial({color:0xff0000, transparent:true, opacity:0.6, linewidth : 10})
+        let geo_x = new THREE.Geometry()
+        let geo_y = new THREE.Geometry()
+        //line x coords
+        geo_x.vertices.push(new THREE.Vector3(5, 0, 10))
+        geo_x.vertices.push(new THREE.Vector3(0, 0, 10))
+        
+        //line y coords
+        geo_y.vertices.push(new THREE.Vector3(5, 0, 10))
+        geo_y.vertices.push(new THREE.Vector3(5, 0, 0))
+
+        let line_x = new THREE.Line(geo_x, material)
+        let line_y = new THREE.Line(geo_y, material)
+
+        this.scene.add(line_x)
+        this.scene.add(line_y)
+        this.red_line_x = line_x
+        this.red_line_y = line_y
+
+        cb()
+    }
+    draw_red_coords( cb ){//RUNS AT INIT THEREFORE IN A CALLBACK CHAIN
+            // use .material.map.needsUpdate = true; to update during the animate section
+
+
+            //need to make a new MakeTextSprite that comes with a way to update the text
+
+            //link do existing cavas that was used so that the dom we can modify it rather than make a new one
+
+            //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // // TODO depending on the z location of camera the scale of the letters must be adjusted 
+            // let sprite = MakeTextSprite( message, { textColor, sizeAttenuation } )
+            // // textSprite.rotation.x = Math.PI / 2
+            // // sprite.position.set(0, 1, 0)
+            // sprite.center = alignV2
+            // sprite.scale.set( width_scale , height_scale)   
+            // return sprite
+
+
+        cb()
+    }
     draw_red_dot( cb ){//RUNS AT INIT THEREFORE IN A CALLBACK CHAIN
         var spriteMap = new THREE.TextureLoader().load( red_dot );
         var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
@@ -915,17 +1004,21 @@ class ThreeDrawGrid extends Component{
             this.custom_event_listeners_add()
             
             // ! FUNCTIONS HERE MUST END WITH CALLBACK
+            // ! I AM SO SORRY FOR THIS HAYNES CALLBACK SIN, PLEASE FORGIVE ME T.T
             this.draw_plane( 
                 ()=> this.draw_plane_rulers(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
                     ()=> this.draw_red_dot(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
                         ()=> this.draw_point_move_arrows(//enclose by unexecuted function otherwise it will attempt to run immediately rather than at cb moment
-                            ()=>{
-                                console.log("starting")
-
-
-                                this.start()
-                            }
-
+                            ()=> this.draw_red_lines(
+                                ()=>this.draw_red_coords(
+                                    ()=>{
+                                        console.log("starting")
+                                        
+                                        
+                                        this.start()
+                                    }
+                                )
+                            )
                         )
                     )
                 )
@@ -955,7 +1048,20 @@ class ThreeDrawGrid extends Component{
         this.raycast_mouse_position()
 
         //!PAINTS RED DOT IN NEW POSITION
-        if( this.red_dot ) this.red_dot.position.set( this.state.mouse.x, 0.1, this.state.mouse.y  )
+        if( this.red_dot ) this.red_dot.position.set( this.state.mouse.x, 0.001, this.state.mouse.y  )
+        //!UPDATE RED DOT LINE POSITIONS
+        if( this.red_line_x ){ 
+            this.red_line_x.geometry.vertices[0].set(this.state.mouse.x, 0.001, this.state.mouse.y)
+            this.red_line_x.geometry.vertices[1].set(0, 0.001, this.state.mouse.y)
+            this.red_line_x.geometry.verticesNeedUpdate = true;
+        }
+        if( this.red_line_y ){ 
+            this.red_line_y.geometry.vertices[0].set(this.state.mouse.x, 0.001, this.state.mouse.y)
+            this.red_line_y.geometry.vertices[1].set(this.state.mouse.x, 0.001, 0)
+            this.red_line_y.geometry.verticesNeedUpdate = true;
+        }        
+        //!UPDATE RED DOT COORD TEXT
+
         //!MOVES ARROW IF HOVERED AND MOUSE DOWN
         if( this.state.mouse.down ) this.drag_active();
 
@@ -979,7 +1085,7 @@ class ThreeDrawGrid extends Component{
         // console.log(category, property)
         return (e)=>{
             let new_state =  {...this.state}
-            new_state[category][property] =parse_type(type, e.target.value)
+            new_state[category][property] = parse_type(type, e.target.value)
             this.setState({...new_state,}, this_fn )
         }
     }
@@ -1019,20 +1125,20 @@ class ThreeDrawGrid extends Component{
                 opacity: 0.9, 
                 zIndex: 10000
             }} className="container">
-                <div className="row col col-sm-3 ">
-                    <div className="col col-sm text-white" >{`Camera X:${ round_2_dec( this.state.camera.x ) } Y:${  round_2_dec(this.state.camera.y)  } Z:${  round_2_dec(this.state.camera.z) }`}</div>
+                <div className="row col col-sm-3 unselectable">
+                    <span className="col col-sm text-white unselectable" >{`Camera X:${ round_2_dec( this.state.camera.x ) } Y:${  round_2_dec(this.state.camera.y)  } Z:${  round_2_dec(this.state.camera.z) }`}</span>
                 </div>
-                <div className="row col col-sm-3 ">
-                    <div className="col col-sm text-white" >{`Mouse X:${this.state.mouse.x} Y:${this.state.mouse.y}`}</div>
+                <div className="row col col-sm-3 unselectable">
+                    <span className="col col-sm text-white unselectable" >{`Mouse X:${this.state.mouse.x} Y:${this.state.mouse.y}`}</span>
                 </div>
-                <div className="row col col-sm-3 ">
-                    <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center">
+                <div className="row col col-sm-3 unselectable">
+                    <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center unselectable">
                         <span>
                             Snap To
                         </span>
                     </div>
                 </div>
-                <div className="row col col-sm-3 ">
+                <div className="row col col-sm-3 unselectable">
                     <select className="col bg-dark text-white"
                     value = {this.state.mouse.snap_increment}
                     onChange={this.set_prop_from_input_event("mouse", "snap_increment", "number", ()=>{} )}
@@ -1053,7 +1159,7 @@ class ThreeDrawGrid extends Component{
                     </select>                   
                 </div>
             
-                <div className="row col col-sm-3 input-group">   
+                <div className="row col col-sm-3 input-group unselectable">   
                     <div className="col text-white text-left border-light border d-flex align-items-start justify-content-center p-0">
                         <input type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="primary" data-offstyle="secondary" 
                         className = "m-0" data-on="Point Snap ON" data-off="Point Snap OFF" 
@@ -1063,7 +1169,7 @@ class ThreeDrawGrid extends Component{
                         />
                     </div>                       
                 </div>            
-                <div className="row col col-sm-3 input-group ">   
+                <div className="row col col-sm-3 input-group unselectable">   
                     <div className="col text-white text-left border-light bg-dark border d-flex align-items-start justify-content-center p-0">
                         <div className="col p-0 m-0" >
                             <button className="btn btn-dark btn-sm border-none pt-0" type="button" data-reactroot=""
