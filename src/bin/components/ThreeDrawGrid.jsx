@@ -11,6 +11,7 @@ import ExtrudeGeometry from "../threeJS_extensions/build/ExtrudeGeometry"
 import red_dot from "../../assets/red_dot.png"
 import { MeshBasicMaterial } from 'three';
 
+import CogWheel2D from "../threeJS_extensions/build/CogWheel2D"
 const round_to_x_curry = ( round_to)=>{
     let pow = Math.pow( 10, round_to )
     console.log(pow)
@@ -34,7 +35,8 @@ const round_3_dec = round_to_x_curry(3)
 /**EXTRUDE contains points/coords that can be used in ExtrudeGeometry to create shapes */
 const EXTRUDE = {
     arrow : [[0, 0],[-0.7, 0],[-0.7, -2],[-1.5, -2],[ 0, -3.5],[1.5, -2],[0.7, -2],[0.7, 0]],
-    sqaure : [[0.9, 0.9], [-0.9, 0.9], [-0.9, -0.9], [0.9, -0.9]]
+    sqaure : [[0.9, 0.9], [-0.9, 0.9], [-0.9, -0.9], [0.9, -0.9]],
+    cog : CogWheel2D( 152, 20)
 }
 let TEST_MESH, TEST_ROTATE = 0
 let DEGREES_ARR = new Array(360).fill(0).map((z, i)=> i); 
@@ -412,6 +414,12 @@ class ThreeDrawGrid extends Component{
 //DRAW DRAW DRAW DRAW===============================================================================================================
     draw_2_point_ruler( cb ){
         
+    }
+    draw_CogWheel(cb){
+        let cogwheel = ExtrudeGeometry(EXTRUDE.cog, ARROW_MATERIAL, { depth: 0.01, bevelEnabled: true,bevelThickness: 0.2, bevelSize: 0.1,}, {x:0.3, y:0.3, z:0.3} )
+        cogwheel.rotateX(RADS_90)
+        this.scene.add( cogwheel )
+
     }
     draw_point_move_arrows( cb ){
         if(this.state.move_arrows.TObj === null){
@@ -1014,8 +1022,12 @@ class ThreeDrawGrid extends Component{
                                     ()=>{
                                         console.log("starting")
                                         
+                                        this.draw_CogWheel(
+                                            
+                                            this.start()
+                                        )
+
                                         
-                                        this.start()
                                     }
                                 )
                             )
